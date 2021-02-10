@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste de posts{% endblock %}
+
+{% block body %}
+
+<div class="form-group">
+    <label for="exampleSelect1">Trier par</label>
+    <select class="form-control" id="postFilter">
+      <option>Titre (Ascendant)</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+    </select>
+</div>
+
+{% for post in posts %}
+<div class="jumbotron">
+  <h1 class="display-3">{{post.title}}</h1>
+  <hr class="my-4">
+  <p>{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' ( le ' ~ post.creationDate | date('d/m/Y') ~ "à " ~ post.creationDate | date('H:i') ~ ')' }}</p>
+  <p class="lead">
+    <a class="btn btn-primary btn-lg" href="{{path('show_post', {id:post.id})}}" role="button">Afficher plus</a>
+  </p>
+</div>
+{% endfor %}
+
+{% endblock %}

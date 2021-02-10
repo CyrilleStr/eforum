@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+{% if post != NULL %}
+    {{ post.title }}   
+{% else %}
+    {{ "Erreur" }}
+{% endif %}
+{% endblock %}
+
+{% block stylesheet %}<link rel="stylesheet" href="{{ asset('css\feuillestyle.css') }} ">{% endblock %}
+
+{% block body %}
+
+{% if post == NULL %}
+
+    <h1>Erreur: l'article demandé n'existe pas ou a été supprimé</h1>
+
+{% else %}
+
+    <h1> {{ post.title }} </h1>
+    <h3> {{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' ( le ' ~ post.creationDate | date('d/m/Y') ~ "à " ~ post.creationDate | date('H:i') ~ ')' }} </h3>
+    <h3> {{ "Catégorie :" ~ post.category.name }} </h3>
+    <h3>Status : 
+        {% if post.status == 0 %}  
+            {{ " ouvert"}}
+        {% else %}
+            {{" fermé"}}
+        {% endif %} 
+    </h3>
+    <p>{{ post.description | raw }} </p>
+
+{% endif %}
+{% endblock %}

@@ -2,12 +2,55 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-
-        {% block javascripts %}{% endblock %}
+        <title>
+        {% block title %}{% endblock %}</title>
+        {% block stylesheets %}<link rel="stylesheet" href="css\feuillestyle.css">{% endblock %}
     </head>
     <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{{ path('home')}}">e-Forum</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor03">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{path('list_posts', {filter:"placement"})}}">Placements</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{path('list_posts', {filter:"e-buisness"})}}">e-Buisness</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{path('list_posts', {filter:"entreprise"})}}">Entreprise</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('list_posts') }}">Posts</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('create_post') }}">Nouveau post</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('list_users') }}">Utilisateurs</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Rechercher">
+            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Rechercher</button>
+            </form>
+            {% if app.user %}
+            <a href="{{ path('app_logout') }}" class="btn btn-primary">Deconnexion</a>
+            {% else %}
+            <a href="{{ path('app_login') }}" class="btn btn-primary">Connexion</a>
+            {% endif %}
+        </div>
+    </nav>
         {% block body %}{% endblock %}
+     <nav class="navbar navbar-expand-lg navbar-light bg-light">
+     <hr class="my-4">
+        <p class="lead">Nik la peau lisse. All right reserved</p>
+        <hr class="my-4">
+     </nav>
+        {% block javascripts %}{% endblock %}
     </body>
 </html>

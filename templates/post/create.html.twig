@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Poste{% endblock %}
+
+
+
+{% block body %}
+
+    {% if app.user %}
+    <h1>Nouveau Post !</h1>
+
+    {{ form_start(formPost) }}
+
+        {{ form_row(formPost.title,{'attr': {'placeholder':"Titre du poste"}}) }}
+        {{ form_row(formPost.type,{'attr':{'placeholder':"Type du poste"}}) }}
+        {{ form_row(formPost.category,{'attr':{'placeholder':"Categorie du poste"}}) }}
+        {{ form_row(formPost.description,{'attr':{'placeholder':"Contenu du poste"}}) }}
+        
+
+        <button type='submit' class="btn btn-success">
+        {% if editMode %}
+            Enregistrer
+        {% else %}
+            Ajouter le Poste  
+        {% endif %}
+        </button>
+
+    {{ form_end(formPost) }}
+    {% else %}
+    <h1>Vous devez vous connecter pour écrire un nouveau poste</h1>
+    {% endif %}
+
+{% endblock %}
