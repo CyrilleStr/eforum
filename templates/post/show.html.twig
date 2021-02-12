@@ -2,13 +2,11 @@
 
 {% block title %}
 {% if post != NULL %}
-    {{ post.title }}   
+    {{ post.title }}
 {% else %}
-    {{ "Erreur" }}
+    Post introuvable
 {% endif %}
 {% endblock %}
-
-{% block stylesheet %}<link rel="stylesheet" href="{{ asset('css\feuillestyle.css') }} ">{% endblock %}
 
 {% block body %}
 
@@ -30,5 +28,55 @@
     </h3>
     <p>{{ post.description | raw }} </p>
 
+    <fieldset>
+        <legend>Commentaires</legend>
+        {% if app.user %}
+            <div class="form-group">
+                {{ form_start(formComment)}}
+                    {{ form_row(formComment.content,{'label':' ', 'attr': {'placeholder':"Ajoutez votre commentaire..."}}) }}
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                {{ form_end(formComment)}}
+            </div>
+        {% else %}
+            <div class="alert alert-dismissible alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h4 class="alert-heading">Connectez-vous pour ajouter un commentaire</h4>
+                <p class="mb-0"><a href="{{path('app_login')}}" class="alert-link">Cliquez-ici pour vous connecter</a>.</p>
+            </div>
+        {% endif %}
+
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+        {% for comment in comments %}
+            <div class="toast-header">
+                <strong class="mr-auto">{{comment.author.firstName ~ ' ' ~ comment.author.lastName}}</strong>
+                {% if app.user %}
+                    <em>   Utilité : <strong id="result" ></strong></em>
+                    <button type="button" class="reaction" id="utile">Utile</button>
+                    <button type="button" class="reaction" id="inutile{{comment.id}}">Inutile</button>
+                {% endif %}
+                <small>{{comment.creationDate | date('d/m/Y') ~ " à " ~ comment.creationDate | date('H:i')}} 
+                    {% if comment.updateDate != NULL %}
+                        {{ ' (modifié le ' ~ comment.updateDate | date('d/m/Y') ~ " à " ~ comment.updateDate | date('H:i') ~ ')'}}
+                    {% endif %}
+                </small>
+            </div>
+            <div class="toast-body"> {{comment.content | raw}} </div>
+        {% endfor %}
+        </div>
+
+    </fieldset>
+    
+
+
 {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    const elt = document.getElementByClassName('reaction');    /
+    elt[0].addEventListener('click', function() {
+        const elt1 = document.getElementById('result');
+        elt1.innerHTML = "yeessssssssai";
+    });
+</script>
 {% endblock %}

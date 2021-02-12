@@ -69,9 +69,21 @@ class User implements UserInterface
      */
     private $posts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="author")
+     */
+    private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CommentRate::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $commentRates;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->commentRates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -219,6 +231,66 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($post->getAuthor() === $this) {
                 $post->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getAuthor() === $this) {
+                $comment->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommentRate[]
+     */
+    public function getCommentRates(): Collection
+    {
+        return $this->commentRates;
+    }
+
+    public function addCommentRate(CommentRate $commentRate): self
+    {
+        if (!$this->commentRates->contains($commentRate)) {
+            $this->commentRates[] = $commentRate;
+            $commentRate->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentRate(CommentRate $commentRate): self
+    {
+        if ($this->commentRates->removeElement($commentRate)) {
+            // set the owning side to null (unless already changed)
+            if ($commentRate->getUser() === $this) {
+                $commentRate->setUser(null);
             }
         }
 
