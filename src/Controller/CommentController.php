@@ -63,7 +63,7 @@ class CommentController extends AbstractController
 
     /**
      * Rate up down a commment
-     * @Route("/post/show/{id}/uprateComment", name="comment_uprate")
+     * @Route("/comment/uprate/{id}", name="comment_uprate")
      *
      * @param Comment $comment
      * @param EntityManagerInterface $manager
@@ -93,8 +93,7 @@ class CommentController extends AbstractController
             return $this->json([
                 'code' => 200,
                 'message' => 'Uprate removed on comment',
-                'rates' => $sum,
-                'state' => 0
+                'rates' => $sum
             ],200);
         }
 
@@ -113,14 +112,13 @@ class CommentController extends AbstractController
         return $this->json([
             'code' => 200, 
             'message' => 'Uprate added on comment',
-            'rates' => $sum,
-            'state' => 1
+            'rates' => $sum
         ],200);
     }
 
     /**
      * Rate down a comment
-     * @Route("/post/show/{id}/downrateComment", name="comment_downrate")
+     * @Route("/comment/downrate/{id}", name="comment_downrate")
      *
      * @param Comment $comment
      * @param EntityManagerInterface $manager
@@ -151,8 +149,7 @@ class CommentController extends AbstractController
             return $this->json([
                 'code' => 200,
                 'message' => 'Downrate removed on comment',
-                'rates' => $sum,
-                'state' => 1
+                'rates' => $sum
             ],200);
         }
 
@@ -171,8 +168,7 @@ class CommentController extends AbstractController
         return $this->json([
             'code' => 200, 
             'message' => 'Downrate added on comment',
-            'rates' => $sum,
-            'state' => 0
+            'rates' => $sum
         ],200);
      }
 }

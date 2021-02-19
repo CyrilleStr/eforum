@@ -61,8 +61,8 @@
                     <h4 class="card-title">{{comment.author.firstName ~ ' ' ~ comment.author.lastName}}</h4>
                     <p class="card-text">{{comment.content | raw}}</p>
                     <span> Utilité : <strong id="ratecount{{comment.id}}"> {{comment.sumCommentRates}} </strong></span>
-                    <a href="{{ path('comment_uprate',{'id':comment.id})}}"class="js-uprate btn btn-success" id="{{comment.id}}">Utile</a>
-                    <a href="{{ path('comment_downrate',{'id':comment.id})}}" class="js-downrate btn btn-danger" id="{{comment.id}}">Inutile</a>
+                    <a {% if app.user %} href="{{path('comment_uprate',{'id':comment.id})}}" {% else %}title="Connectez-vous pour réagir"{% endif %}class="js-uprate btn btn-success" id="{{comment.id}}">Utile</a>
+                    <a {% if app.user %} href="{{path('comment_downrate',{'id':comment.id})}}" {% else %}title="Connectez-vous pour réagir"{% endif %} class="js-downrate btn btn-danger" id="{{comment.id}}">Inutile</a>
                 </div>
             </div>
         {% endfor %}
@@ -76,6 +76,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         console.log("debug :");
+        {% if app.user %}
         function onClickUprateBtn(event) {
             console.log("uprate function");
             event.preventDefault();
@@ -170,6 +171,8 @@
         );
         
         document.querySelector("#submit_button").addEventListener('click',onclickSubmitButton);
+
+        {% endif %}
        
     </script>
 {% endblock %}
