@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\CommentRate;
 use App\Entity\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,4 +43,19 @@ class MainController extends AbstractController
         $manager->flush();
         return $this->redirectToRoute('home');
     }
+
+    /**
+     * @Route("/test", name="test")
+     */
+
+    public function test(){
+        $repoCommentRate = $this->getDoctrine()->getRepository(CommentRate::class);
+        $a = $repoCommentRate->find(80);
+        
+
+
+        return $this->render('main/test.html.twig', [
+            'controller_name' => 'test',
+        ]);
+    }     
 }

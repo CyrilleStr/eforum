@@ -16,67 +16,102 @@
 
 {% else %}
 
-    <h1> {{ post.title }} </h1>
-    <h3> {{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' ( le ' ~ post.creationDate | date('d/m/Y') ~ "à " ~ post.creationDate | date('H:i') ~ ')' }} </h3>
-    <h3> {{ "Catégorie :" ~ post.category.name }} </h3>
-    <h3>Status : 
-        {% if post.status == 0 %}  
-            {{ " ouvert"}}
-        {% else %}
-            {{" fermé"}}
-        {% endif %} 
-    </h3>
-    <p>{{ post.description | raw }} </p>
+    <div class="jumbotron">
+    <h1 class="display-3">{{ post.title }}</h1>
+        <p class="lead">{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' ( le ' ~ post.creationDate | date('d/m/Y') ~ "à " ~ post.creationDate | date('H:i') ~ ')' }} </p>
+        <p class="lead">{{ "Catégorie : " ~ post.category.name }} </p>
+        <hr class="my-4">
+        <p>{{ post.description | raw }}</p>
+        <p class="lead">
+           <span class="badge badge-info">
+           {% if post.status == 0 %}  
+                {{ " ouvert"}}
+            {% else %}
+                {{" fermé"}}
+            {% endif %} </span>
+        </p>
+    </div>
 
     <fieldset>
         <legend>Commentaires</legend>
         {% if app.user %}
             <div class="form-group">
                 {{ form_start(formComment)}}
-                    {{ form_row(formComment.content,{'label':' ', 'attr': {'placeholder':"Ajoutez votre commentaire..."}}) }}
+                    {{ form_row(formComment.content,{'label':' ', 'attr': {'placeholder':"Ajoutez votre commentaire...", 'class':"form-control", 'rows':"3"}}) }}
                     <button type="submit" class="btn btn-primary">Ajouter</button>
                 {{ form_end(formComment)}}
             </div>
         {% else %}
             <div class="alert alert-dismissible alert-warning">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h4 class="alert-heading">Connectez-vous pour ajouter un commentaire</h4>
                 <p class="mb-0"><a href="{{path('app_login')}}" class="alert-link">Cliquez-ici pour vous connecter</a>.</p>
             </div>
         {% endif %}
 
-        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
         {% for comment in comments %}
-            <div class="toast-header">
-                <strong class="mr-auto">{{comment.author.firstName ~ ' ' ~ comment.author.lastName}}</strong>
-                {% if app.user %}
-                    <em>   Utilité : <strong id="result" ></strong></em>
-                    <button type="button" class="reaction" id="utile">Utile</button>
-                    <button type="button" class="reaction" id="inutile{{comment.id}}">Inutile</button>
+        <div class="card border-dark mb-3" style="max-width: 100%;">
+            <div class="card-header">
+                {{comment.creationDate | date('d/m/Y') ~ " à " ~ comment.creationDate | date('H:i')}} 
+                {% if comment.updateDate != NULL %}
+                    {{ ' (modifié le ' ~ comment.updateDate | date('d/m/Y') ~ " à " ~ comment.updateDate | date('H:i') ~ ')'}}
                 {% endif %}
-                <small>{{comment.creationDate | date('d/m/Y') ~ " à " ~ comment.creationDate | date('H:i')}} 
-                    {% if comment.updateDate != NULL %}
-                        {{ ' (modifié le ' ~ comment.updateDate | date('d/m/Y') ~ " à " ~ comment.updateDate | date('H:i') ~ ')'}}
-                    {% endif %}
-                </small>
             </div>
-            <div class="toast-body"> {{comment.content | raw}} </div>
+            <div class="card-body">
+                <h4 class="card-title">{{comment.author.firstName ~ ' ' ~ comment.author.lastName}}</h4>
+                <p class="card-text">{{comment.content | raw}}</p>
+                <span> Utilité : <strong id="ratecount{{comment.id}}"> {{comment.sumCommentRates}} </strong></span>
+                <a href="{{ path('comment_uprate',{'id':comment.id})}}"class="js-uprate btn btn-success" id="{{comment.id}}">Utile</a>
+                <a href="{{ path('comment_downrate',{'id':comment.id})}}"class="js-downrate btn btn-danger" disable id="{{comment.id}}">Inutile</a>
+            </div>
+        </div>
         {% endfor %}
         </div>
 
     </fieldset>
-    
-
-
 {% endif %}
 {% endblock %}
 
 {% block javascripts %}
-<script>
-    const elt = document.getElementByClassName('reaction');    /
-    elt[0].addEventListener('click', function() {
-        const elt1 = document.getElementById('result');
-        elt1.innerHTML = "yeessssssssai";
-    });
-</script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        console.log("debug :");
+        function onClickUprateBtn(event) {
+            console.log("uprate function");
+            event.preventDefault();
+            const url = this.href;
+            if(url != null){
+                console.log("url !=NULL");
+                const rateCount = document.getElementById(`ratecount${this.id}`);
+                axios.get(url).then(function(response){
+                    console.log("response request:");
+                    console.log(response.data.rates);
+                    rateCount.textContent = response.data.rates;
+                });
+            }
+        }
+
+        function onClickDownrateBtn(event) {
+            console.log("downrate function");
+            event.preventDefault();
+            const url = this.href;
+            if(url != null){
+                console.log("url !=NULL");
+                const rateCount = document.getElementById(`ratecount${this.id}`);
+                axios.get(url).then(function(response){
+                    console.log("response request:");
+                    console.log(response.data.rates);
+                    rateCount.textContent = response.data.rates;
+                });
+            }
+        }
+
+        document.querySelectorAll('a.js-uprate').forEach( 
+            link => link.addEventListener('click',onClickUprateBtn)
+        );
+
+        document.querySelectorAll('a.js-downrate').forEach( 
+            link => link.addEventListener('click',onClickDownrateBtn)
+        );
+       
+    </script>
 {% endblock %}

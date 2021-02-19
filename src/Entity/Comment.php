@@ -59,6 +59,13 @@ class Comment
         return $this->id;
     }
 
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getAuthor(): ?User
     {
         return $this->author;
@@ -147,5 +154,41 @@ class Comment
         }
 
         return $this;
+    }
+
+    /**
+     * know if the logged user has rated up this comment
+     *
+     * @param User $user
+     * @return boolean
+     */
+    public function isRatedUp(User $user) : bool {
+        foreach($this->commentRates as $CommentRate){
+            if($CommentRate->getUser() === $user && $CommentRate->getNote() === 1) return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * know if the logged user has rated down this comment
+     *
+     * @param User $user
+     * @return boolean
+     */
+    public function isRatedDown(User $user) : bool {
+        foreach($this->commentRates as $CommentRate){
+            if($CommentRate->getUser() === $user && $CommentRate->getNote() === -1) return true;
+        }
+
+        return false;
+    }
+
+    public function sumCommentRates(): int {
+        $sum =(int) 0;
+        foreach($this->commentRates as $CommentRate){
+            $sum += $CommentRate->getNote();
+        }
+        return $sum;    
     }
 }
