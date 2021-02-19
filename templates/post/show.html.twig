@@ -18,7 +18,7 @@
 
     <div class="jumbotron">
     <h1 class="display-3">{{ post.title }}</h1>
-        <p class="lead">{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' ( le ' ~ post.creationDate | date('d/m/Y') ~ "à " ~ post.creationDate | date('H:i') ~ ')' }} </p>
+        <p class="lead">{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ "à " ~ post.creationDate | date('H:i') ~ ')' }} </p>
         <p class="lead">{{ "Catégorie : " ~ post.category.name }} </p>
         <hr class="my-4">
         <p>{{ post.description | raw }}</p>
@@ -36,10 +36,10 @@
         <legend>Commentaires</legend>
         {% if app.user %}
             <div class="form-group">
-                {{ form_start(formComment)}}
-                    {{ form_row(formComment.content,{'label':' ', 'attr': {'placeholder':"Ajoutez votre commentaire...", 'class':"form-control", 'rows':"3"}}) }}
-                    <button type="submit" class="btn btn-primary">Ajouter</button>
-                {{ form_end(formComment)}}
+                <form action="{{path('create_comment',{'id':post.id})}}" method="POST" id="add_comment_form">
+                    <textarea name="content" cols="30" rows="3" placeholder="Ajoutez votre commentaire..." class="form-control"></textarea>
+                    <button type="submit" class="btn btn-primary" id="submit_button">Ajouter</button>
+                </form>
             </div>
         {% else %}
             <div class="alert alert-dismissible alert-warning">
@@ -47,25 +47,26 @@
                 <p class="mb-0"><a href="{{path('app_login')}}" class="alert-link">Cliquez-ici pour vous connecter</a>.</p>
             </div>
         {% endif %}
-
+        
+        <div id="comments_area">
         {% for comment in comments %}
-        <div class="card border-dark mb-3" style="max-width: 100%;">
-            <div class="card-header">
-                {{comment.creationDate | date('d/m/Y') ~ " à " ~ comment.creationDate | date('H:i')}} 
-                {% if comment.updateDate != NULL %}
-                    {{ ' (modifié le ' ~ comment.updateDate | date('d/m/Y') ~ " à " ~ comment.updateDate | date('H:i') ~ ')'}}
-                {% endif %}
+            <div class="card border-dark mb-3" style="max-width: 100%;">
+                <div class="card-header">
+                    {{comment.creationDate | date('d/m/Y') ~ " à " ~ comment.creationDate | date('H:i')}} 
+                    {% if comment.updateDate != NULL %}
+                        {{ ' (modifié le ' ~ comment.updateDate | date('d/m/Y') ~ " à " ~ comment.updateDate | date('H:i') ~ ')'}}
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">{{comment.author.firstName ~ ' ' ~ comment.author.lastName}}</h4>
+                    <p class="card-text">{{comment.content | raw}}</p>
+                    <span> Utilité : <strong id="ratecount{{comment.id}}"> {{comment.sumCommentRates}} </strong></span>
+                    <a href="{{ path('comment_uprate',{'id':comment.id})}}"class="js-uprate btn btn-success" id="{{comment.id}}">Utile</a>
+                    <a href="{{ path('comment_downrate',{'id':comment.id})}}" class="js-downrate btn btn-danger" id="{{comment.id}}">Inutile</a>
+                </div>
             </div>
-            <div class="card-body">
-                <h4 class="card-title">{{comment.author.firstName ~ ' ' ~ comment.author.lastName}}</h4>
-                <p class="card-text">{{comment.content | raw}}</p>
-                <span> Utilité : <strong id="ratecount{{comment.id}}"> {{comment.sumCommentRates}} </strong></span>
-                <a href="{{ path('comment_uprate',{'id':comment.id})}}"class="js-uprate btn btn-success" id="{{comment.id}}">Utile</a>
-                <a href="{{ path('comment_downrate',{'id':comment.id})}}"class="js-downrate btn btn-danger" disable id="{{comment.id}}">Inutile</a>
-            </div>
-        </div>
         {% endfor %}
-        </div>
+
 
     </fieldset>
 {% endif %}
@@ -105,6 +106,61 @@
             }
         }
 
+        function onclickSubmitButton(){
+            console.log("onclicksubmitbutton function");
+            event.preventDefault();
+            const form =  document.querySelector('#add_comment_form');
+            const textarea = form.querySelector('textarea');
+            const button = this;
+
+            // Interrupting input
+
+            button.disabled = true;
+            textarea.disabled = true;
+            button.innerHTML = "Publication...";
+
+            // Extracting and packaging data
+            const data = new FormData();
+            const content = textarea.value;
+            console.log(content);
+            data.append('content',content);
+
+            // Sending data
+            const url = form.action;
+            const requestAjax = new XMLHttpRequest();
+            requestAjax.open('POST',url);
+            requestAjax.send(data);
+            requestAjax.onload = function () {
+                console.log("onload function");
+                const response = JSON.parse(requestAjax.responseText);
+                var newDiv = document.createElement("div");
+                newDiv.setAttribute('class',"card border-dark mb-3");
+                newDiv.setAttribute('style',"max-width: 100%;");
+                newDiv.innerHTML = `
+                <div class="card-header">
+                    ${response.creationDate}
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">${userFirstName} ${userLastName}</h4>
+                    <p class="card-text">${content}</p>
+                    <span> Utilité : <strong id="ratecount${response.id}">0</strong></span>
+                    <a href="/post/show/${response.id}/uprateComment" class="js-uprate btn btn-success" id="${response.id}">Utile</a>
+                    <a href="/post/show/${response.id}/uprateComment" class="js-downrate btn btn-danger" id="${response.id}">Inutile</a>
+                </div>
+                `;
+                newDiv.querySelector('a.js-uprate').addEventListener('click',onClickUprateBtn);
+                newDiv.querySelector('a.js-downrate').addEventListener('click',onClickDownrateBtn);
+                document.getElementById("comments_area").prepend(newDiv);
+                button.disabled = false;
+                textarea.disabled = false;
+                button.innerHTML = "Ajouter";
+            }
+        }
+
+        const userFirstName = "{{app.user.firstName}}";
+        const userLastName = "{{app.user.lastName}}";
+
+
         document.querySelectorAll('a.js-uprate').forEach( 
             link => link.addEventListener('click',onClickUprateBtn)
         );
@@ -112,6 +168,8 @@
         document.querySelectorAll('a.js-downrate').forEach( 
             link => link.addEventListener('click',onClickDownrateBtn)
         );
+        
+        document.querySelector("#submit_button").addEventListener('click',onclickSubmitButton);
        
     </script>
 {% endblock %}

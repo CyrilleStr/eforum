@@ -47,25 +47,9 @@ class PostController extends AbstractController
 
      public function show($id, Request $request,EntityManagerInterface $manager){
 
-        // Authentification Check
-        $securityContext = $this->container->get('security.authorization_checker');
-
         // Get post
         $repoPost = $this->getDoctrine()->getRepository(Post::class);
         $post = $repoPost->find($id);
-
-        // New comment
-        $comment = new Comment();
-        $formComment = $this->createForm(CommentType::class,$comment);
-        $formComment->handleRequest($request);
-
-        if($formComment->isSubmitted() && $formComment->isValid()){
-            $comment->setCreationDate(new \DateTime);
-            $comment->setAuthor($this->getUser());
-            $comment->setPost($post);
-            $manager->persist($comment);
-            $manager->flush();
-        }
 
         // Get comments       
         $repoComment = $this->getDoctrine()->getRepository(Comment::class);
@@ -76,7 +60,6 @@ class PostController extends AbstractController
 
 
         return $this->render('post/show.html.twig',[
-            'formComment' => $formComment->createView(),
             'post' => $post,
             'comments' => $comments
         ]);

@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\CommentRate;
+use App\Entity\Post;
 use App\Repository\CommentRateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -20,6 +22,43 @@ class CommentController extends AbstractController
         return $this->render('comment/index.html.twig', [
             'controller_name' => 'CommentController',
         ]);
+    }
+
+    /**
+     * @Route("/comment/create/{id}", name="create_comment")
+     */
+    
+    public function create(Post $post, EntityManagerInterface $manager){
+
+        $user = $this->getUser();
+
+        if (!$user) return $this->json([
+            'code' => 403,
+            'message' => 'Unauthorized'
+        ],403);
+
+        if(array_key_exists('content',$_POST)){
+            $comment = new Comment();
+            $now = new \DateTime;
+            $comment->setCreationDate($now);
+            $comment->setAuthor($user);
+            $comment->setContent($_POST['content']);
+            $comment->setPost($post);
+            $manager->persist($comment);
+            $manager->flush();
+            $creationDate = $now->format('d/m/Y à H:i');
+            return $this->json([
+                'code' => 200,
+                'message' => "Comment succesfully added",
+                'id' => $comment->getId(),
+                'creationDate' => $creationDate
+            ],200);            
+        }else{
+            return $this->json([
+            'code' => 403,
+            'message' => 'Content field is empty'
+            ],403);
+        }
     }
 
     /**
