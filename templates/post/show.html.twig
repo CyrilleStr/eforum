@@ -145,8 +145,8 @@
                     <h4 class="card-title">${userFirstName} ${userLastName}</h4>
                     <p class="card-text">${content}</p>
                     <span> Utilité : <strong id="ratecount${response.id}">0</strong></span>
-                    <a href="/post/show/${response.id}/uprateComment" class="js-uprate btn btn-success" id="${response.id}">Utile</a>
-                    <a href="/post/show/${response.id}/uprateComment" class="js-downrate btn btn-danger" id="${response.id}">Inutile</a>
+                    <a href="/comment/uprate/${response.id}" class="js-uprate btn btn-success" id="${response.id}">Utile</a>
+                    <a href="/comment/downrate/${response.id}" class="js-downrate btn btn-danger" id="${response.id}">Inutile</a>
                 </div>
                 `;
                 newDiv.querySelector('a.js-uprate').addEventListener('click',onClickUprateBtn);
