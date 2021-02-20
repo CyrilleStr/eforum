@@ -36,7 +36,7 @@ class PostController extends AbstractController
         }
         
         return $this->render('post/create.html.twig', [
-            'formCommentPost' => $form->createView(),
+            'formPost' => $form->createView(),
             'editMode' => $editMode
         ]);
     }
@@ -107,48 +107,3 @@ class PostController extends AbstractController
      }
 
 }
-
-    
-
-
-//  // New Comment Rate
-
-//  if($securityContext->isGranted('IS_AUTHENTICATED_FULLY') && (isset($_POST['utile']) || isset($_POST['inutile']))){
-//     if(isset($_POST['utile'])){
-//         foreach($comments as $comment) {
-//             if ($comment->getId() == $_POST['utile']) {
-//                 $comment1 = $comment;
-//                 break;
-//             }
-//         }
-//         $commentRate = new CommentRate();
-//         $commentRate->setComment($comment1);
-//         $commentRate->setUser($this->getUser());
-//         $commentRate->setNote(1);
-//     }else{
-//         foreach($comments as $comment) {
-//             if ($comment->getId() == ($_POST['inutile'] )) {
-//                 $comment1 = $comment;
-//                 break;
-//             }
-//         }
-//         $commentRate = new CommentRate();
-//         $commentRate->setComment($comment1);
-//         $commentRate->setUser($this->getUser());
-//         $commentRate->setNote(-1);
-//     }
-//     $manager->persist($commentRate);
-//     $manager->flush();
-// }
-
-// // Get commetRate's comment
-
-// $repoCommentRate = $this->getDoctrine()->getRepository(CommentRate::class);
-// $commentsRate = array();
-
-// echo '<pre>';
-// var_dump($repoCommentRate->findBy(
-//     ['comment' => $comments[0]]
-// ));
-// echo '</pre>';
-// die;

@@ -79,11 +79,27 @@ class User implements UserInterface
      */
     private $commentRates;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $accountCreationDate;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $activity;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Badge::class, inversedBy="users")
+     */
+    private $badge;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->commentRates = new ArrayCollection();
+        $this->badge = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -293,6 +309,54 @@ class User implements UserInterface
                 $commentRate->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAccountCreationDate(): ?\DateTimeInterface
+    {
+        return $this->accountCreationDate;
+    }
+
+    public function setAccountCreationDate(\DateTimeInterface $accountCreationDate): self
+    {
+        $this->accountCreationDate = $accountCreationDate;
+
+        return $this;
+    }
+
+    public function getActivity(): ?string
+    {
+        return $this->activity;
+    }
+
+    public function setActivity(?string $activity): self
+    {
+        $this->activity = $activity;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Badge[]
+     */
+    public function getBadge(): Collection
+    {
+        return $this->badge;
+    }
+
+    public function addBadge(Badge $badge): self
+    {
+        if (!$this->badge->contains($badge)) {
+            $this->badge[] = $badge;
+        }
+
+        return $this;
+    }
+
+    public function removeBadge(Badge $badge): self
+    {
+        $this->badge->removeElement($badge);
 
         return $this;
     }

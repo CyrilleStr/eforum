@@ -11,47 +11,44 @@ utilisateur introuvé
 {% block body %}
 
 {% if user != NULL %}
-<ul class="nav nav-tabs">
-  <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#home">Home</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#profile">Profile</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link disabled" href="#">Disabled</a>
-  </li>
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-    <div class="dropdown-menu" style="">
-      <a class="dropdown-item" href="#">Action</a>
-      <a class="dropdown-item" href="#">Another action</a>
-      <a class="dropdown-item" href="#">Something else here</a>
-      <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#">Separated link</a>
+  <div class="jumbotron">
+    <h1 class="display-3">{{ user.firstName ~ ' ' ~ user.lastName}}</h1>
+    <p class="lead">Membre depuis le {{ user.accountCreationDate | date('d/m/Y') }} </p>
+    {% if user.activity != null %}
+    <hr class="my-4"> 
+    <p> {{ user.activity }} </p>
+    {% endif %}
+  </div>
+  {% if user.posts|length == 0 %}
+    <div class="alert alert-dismissible alert-info">
+      Cette utilisateur n'a publié encore aucun post
     </div>
-  </li>
-</ul>
-<div id="myTabContent" class="tab-content">
-  <div class="tab-pane fade active show" id="home">
-    <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
-  </div>
-  <div class="tab-pane fade" id="profile">
-    <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.</p>
-  </div>
-  <div class="tab-pane fade" id="dropdown1">
-    <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.</p>
-  </div>
-  <div class="tab-pane fade" id="dropdown2">
-    <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater.</p>
-  </div>
-</div>
-</div>
+  {% else %}
+    <h1>Derniers posts</h1>
+    {% for post in user.posts %}
+    <div class="list-group">
+      <a href="{{ path('show_post',{id:post.id})}}" class="list-group-item list-group-item-action flex-column align-items-start active">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1"> {{ post.title}} </h5>
+          <small> {{ post.creationDate | date('d/m/Y') }} </small>
+        </div>
+        <p class="mb-1"> {{ post.description|length > 50 ? post.description|slice(0, 50) ~ '...' :post.description  }}</p>
+        <span class="badge badge-info">
+        {% if post.status == 0 %}  
+            {{ " ouvert"}}
+        {% else %}
+            {{" fermé"}}
+        {% endif %}</span>
+      </a>
+    </div>
+    {% endfor %}
+  {% endif %}
+
 {% else %}
-<div class="alert alert-dismissible alert-danger">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <strong>Cet utilisateur n'existe pas !</strong> <a href="#" class="alert-link">Voir tous les utilisateurs</a> Cet utilisateur a peut-être été supprimé.
-</div>
+  <div class="alert alert-dismissible alert-danger">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Cet utilisateur n'existe pas !</strong> <a href="#" class="alert-link">Voir tous les utilisateurs</a> Cet utilisateur a peut-être été supprimé.
+  </div>
 {% endif %}
 
 {% endblock %}
