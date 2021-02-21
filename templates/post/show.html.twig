@@ -84,6 +84,7 @@
             console.log("uprate function");
             event.preventDefault();
             const url = this.href;
+            this.disable = true;
             if(url != null){
                 console.log("url !=NULL");
                 const rateCount = document.getElementById(`ratecount${this.id}`);
@@ -93,6 +94,8 @@
                     rateCount.textContent = response.data.rates;
                 });
             }
+            this.disable = false;
+
         }
 
         function onClickDownrateBtn(event) {
@@ -155,6 +158,7 @@
                 newDiv.querySelector('a.js-uprate').addEventListener('click',onClickUprateBtn);
                 newDiv.querySelector('a.js-downrate').addEventListener('click',onClickDownrateBtn);
                 document.getElementById("comments_area").prepend(newDiv);
+                textarea.value = "";
                 button.disabled = false;
                 textarea.disabled = false;
                 button.innerHTML = "Ajouter";
