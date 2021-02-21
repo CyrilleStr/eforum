@@ -50,8 +50,11 @@
         
         <div id="comments_area">
         {% for comment in comments %}
-            <div class="card border-dark mb-3" style="max-width: 100%;">
+            <div class="card border-dark mb-3" style="max-width: 100%;" id="commentDiv{{comment.id}}">
                 <div class="card-header">
+                    {% if comment.author == app.user %}
+                        <a class="close" id="{{comment.id}}" href="{{path('delete_comment',{id:comment.id})}}">&times;</a>
+                    {% endif %}
                     {{comment.creationDate | date('d/m/Y') ~ " à " ~ comment.creationDate | date('H:i')}} 
                     {% if comment.updateDate != NULL %}
                         {{ ' (modifié le ' ~ comment.updateDate | date('d/m/Y') ~ " à " ~ comment.updateDate | date('H:i') ~ ')'}}
@@ -158,6 +161,24 @@
             }
         }
 
+        function onClickDeleteBtn(){
+            console.log("onClickCloseBtn function");
+            event.preventDefault();
+            const url = this.href;
+            const id = this.id;
+            if(url != null){
+                console.log("url !=NULL");
+                axios.get(url).then(function(response){
+                    console.log("response request message:");
+                    if(response.data.code == 200){
+                        document.querySelector(`div#commentDiv${id}`).remove();
+                    }else{
+                        this.innerHTML = "Error";
+                    }
+                });
+            }
+        }
+
         const userFirstName = "{{app.user.firstName}}";
         const userLastName = "{{app.user.lastName}}";
 
@@ -171,6 +192,10 @@
         );
         
         document.querySelector("#submit_button").addEventListener('click',onclickSubmitButton);
+
+        document.querySelectorAll('a.close').forEach( 
+            link => link.addEventListener('click',onClickDeleteBtn)
+        );
 
         {% endif %}
        

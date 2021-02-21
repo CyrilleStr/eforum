@@ -6,6 +6,7 @@ use App\Entity\Comment;
 use App\Entity\CommentRate;
 use App\Entity\Post;
 use App\Repository\CommentRateRepository;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\BrowserKit\Request;
@@ -59,6 +60,45 @@ class CommentController extends AbstractController
             'message' => 'Content field is empty'
             ],403);
         }
+    }
+    
+    /**
+     * @Route("/comment/delete/{id}", name="delete_comment")
+     */
+
+    public function delete(Comment $comment, EntityManagerInterface $manager, CommentRepository $commentRepo){
+        $user = $this->getUser();
+
+        if(!$user) return $this->json([
+            'code' => 403,
+            'message' => "Unauthorized"
+        ],403);
+
+        if(isset($comment)){
+            $tmp = $user->getcomments();
+            
+            $usersComments = $commentRepo->findBy(['author' => $user, 'id' => $comment->getId()]);
+            
+            if($usersComments != null){
+                $manager->remove($comment);
+                $manager->flush();
+                return $this->json([
+                    'code' => 200,
+                    'message' => "Comment removed succesfully"
+                ]);
+            }else{
+                return $this->json([
+                    'code' => 403,
+                    'message' => "Unauthorized"
+                ],403);
+            }
+        }else{
+            return $this->json([
+                'code' => 403,
+                'message' => "Comment's id not specified"
+            ],403);
+        }
+
     }
 
     /**

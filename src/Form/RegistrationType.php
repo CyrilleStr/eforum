@@ -20,7 +20,6 @@ class RegistrationType extends AbstractType
             ->add('activity',TextareaType::class)
             ->add('password',PasswordType::class)
             ->add('confirm_password',PasswordType::class)
-
         ;
     }
 

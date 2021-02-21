@@ -49,9 +49,12 @@ class MainController extends AbstractController
      */
 
     public function test(){
-        $repoCommentRate = $this->getDoctrine()->getRepository(CommentRate::class);
-        $a = $repoCommentRate->find(80);
-        
+        $a = $this->getUser()->getcomments();
+               
+        echo '<pre>';
+        var_dump($a);
+        echo '</pre>';
+        die;
 
 
         return $this->render('main/test.html.twig', [
