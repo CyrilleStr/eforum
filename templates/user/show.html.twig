@@ -17,7 +17,16 @@ utilisateur introuvé
     {% if user.activity != null %}
     <hr class="my-4"> 
     <p> {{ user.activity }} </p>
+    {% if app.user %}
+      {% if app.user.isUserFollowed(user) %}
+        <button type="button" id="/user/follow/{{user.id}}" class="follow btn btn-info">Ne plus suivre</button>
+      {% else %}
+        <button type="button" id="/user/follow/{{user.id}}" class="follow btn btn-info">Suivre</button>
+      {% endif %}
     {% endif %}
+  {% endif %}
+    
+
   </div>
   {% if user.posts|length == 0 %}
     <div class="alert alert-dismissible alert-info">
@@ -51,4 +60,36 @@ utilisateur introuvé
   </div>
 {% endif %}
 
+{% endblock %}
+
+
+{% block javascripts %}
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+  {% if app.user %}
+
+    function onClickFollowBtn(event) {
+        event.preventDefault();
+        const url = this.id;
+        const btn = this;
+        this.disable = true;
+        axios.get(url).then(function(response){
+            console.log(response.data.message);
+            if (response.data.code == 200) {
+              if(response.data.state == 1){
+              btn.innerHTML = "Ne plus suivre";
+              }else{
+                btn.innerHTML = "Suivre";
+              }
+            }else{
+              btn.innerHTML == "error";
+            }
+        });
+        btn.disable = false;
+    }
+
+    document.querySelector("button.follow").addEventListener('click',onClickFollowBtn);
+
+  {% endif %}
+  </script>
 {% endblock %}

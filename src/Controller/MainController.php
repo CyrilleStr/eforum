@@ -49,10 +49,9 @@ class MainController extends AbstractController
      */
 
     public function test(){
-        $a = $this->getUser()->getcomments();
-               
+        $a = $this->getUser()->getUsersFollowed();
         echo '<pre>';
-        var_dump($a);
+        echo $a[0]->getLastName();
         echo '</pre>';
         die;
 

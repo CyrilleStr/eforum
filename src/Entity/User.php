@@ -94,12 +94,28 @@ class User implements UserInterface
      */
     private $badge;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="usersFollowed")
+     */
+    private $usersFollower;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="usersFollower")
+     * @ORM\JoinTable(name="follow",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="follow_user_id", referencedColumnName="id")}
+     *      )
+     */
+    private $usersFollowed;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->commentRates = new ArrayCollection();
         $this->badge = new ArrayCollection();
+        $this->usersFollower = new ArrayCollection();
+        $this->usersFollowed = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -360,4 +376,72 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getUsersFollower(): Collection
+    {
+        return $this->usersFollower;
+    }
+
+    public function addUsersFollower(self $usersFollower): self
+    {
+        if (!$this->usersFollower->contains($usersFollower)) {
+            $this->usersFollower[] = $usersFollower;
+        }
+
+        return $this;
+    }
+
+    public function removeUsersFollower(self $usersFollower): self
+    {
+        $this->usersFollower->removeElement($usersFollower);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getUsersFollowed(): Collection
+    {
+        return $this->usersFollowed;
+    }
+
+    public function addUsersFollowed(self $usersFollowed): self
+    {
+        if (!$this->usersFollowed->contains($usersFollowed)) {
+            $this->usersFollowed[] = $usersFollowed;
+            $usersFollowed->addUsersFollower($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUsersFollowed(self $usersFollowed): self
+    {
+        if ($this->usersFollowed->removeElement($usersFollowed)) {
+            $usersFollowed->removeUsersFollower($this);
+        }
+
+        return $this;
+    }
+    
+
+    /**
+     * know if a user is already followed or not
+     *
+     * @param User $user
+     * @return boolean
+     */
+    public function isUserFollowed(User $user) : bool {
+        foreach($this->usersFollowed as $userFollowed){
+            if($userFollowed === $user) return true;
+        }
+
+        return false;
+    }
+
+
 }
