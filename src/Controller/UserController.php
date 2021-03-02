@@ -26,10 +26,12 @@ class UserController extends AbstractController
      * @Route("/user/show/{id}", name="show_user")
      */
 
-    public function userPage($id){
+    public function show($id){
         $user = new User;
         $repo = $this->getDoctrine()->getRepository(User::class);
         $user = $repo->find($id);
+        if($this->getUser() == $user) return $this->redirectToRoute('my_account');
+
         return $this->render('user/show.html.twig', [
             'user' => $user
         ]);
@@ -59,6 +61,21 @@ class UserController extends AbstractController
             'users' => $users
         ]);
     }
+
+    /**
+     * @Route("/user/my_account", name="my_account")
+     */
+
+    public function myAccount(){
+        
+        $user = $this->getUser();
+        if(!$user) return $this->redirectToRoute('app_login');
+        
+        return $this->render('user/my_account.html.twig', [
+            'user' => $user
+        ]);
+    }
+
     /**
      * @Route("/user/follow/{id}", name="user_follow")
      */
@@ -100,4 +117,33 @@ class UserController extends AbstractController
             ],200);
         }
     }
+
+    /**
+     * @Route("/user/my_account/modify", name="modify_account")
+     */
+
+    public function modifyAccount(EntityManagerInterface $manager){
+        
+        $user = $this->getUser();
+        if(!$user) return $this->redirectToRoute('app_login');
+
+        if(array_key_exists('firstName',$_POST) && array_key_exists('lastName',$_POST) && array_key_exists('email',$_POST) && array_key_exists('activity',$_POST)){
+            $user->setFirstName($_POST['firstName'])
+                 ->setLastName($_POST['lastName'])
+                 ->setEmail($_POST['email'])
+                 ->setActivity($_POST['activity']);
+            $manager->persist($user);
+            $manager->flush();
+            return $this->json([
+                'code' => 200,
+                'message' => "Accounts informations successfully modified"
+            ],200);
+        }else{
+            return $this->json([
+            'code' => 403,
+            'message' => 'One or many fields are empty'
+            ],403);
+        }
+    }
+    
 }

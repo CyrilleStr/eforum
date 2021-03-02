@@ -1,4 +1,6 @@
 Postcontroller: list() : impossible de trier par creation_date (type non reconnu)
 A faire :
+- Post::trier par
+- centre de notifs
+- fonction de recherche (utilisateur/post)
 - optimiser code CommentController::uprate et downrate (trop de répétition de code)
-- 

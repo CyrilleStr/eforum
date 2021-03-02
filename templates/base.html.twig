@@ -40,6 +40,7 @@
             </form>
             {% if app.user %}
             <a href="{{ path('app_logout') }}" class="btn btn-primary">Deconnexion</a>
+            <a href="{{ path('my_account') }}" class="btn btn-primary">Mon Compte</a>
             {% else %}
             <a href="{{ path('app_login') }}" class="btn btn-primary">Connexion</a>
             {% endif %}

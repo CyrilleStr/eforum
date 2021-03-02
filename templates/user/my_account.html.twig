@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+Mon Compte
+{% endblock %}
+
+{% block body %}
+
+  <div class="jumbotron">
+    <div id="account_infos">
+      <h1 class="display-3">{{ user.firstName ~ ' ' ~ user.lastName}}</h1>
+      <p class="lead">Membre depuis le {{ user.accountCreationDate | date('d/m/Y') }} </p>
+      {% if user.activity != null %}
+      <hr class="my-4"> 
+      <p> {{ user.activity }} </p>
+      <button id="modify_account" class="btn btn-info">Modifier</button>
+      {% endif %}
+    </div>
+  </div>
+  {% if user.posts|length == 0 %}
+    <div class="alert alert-dismissible alert-info">
+      Vous n'avez publié encore aucun poste
+    </div>
+  {% else %}
+    <h1>Vos derniers postes</h1>
+    {% for post in user.posts %}
+    <div class="list-group">
+      <a href="{{ path('show_post',{id:post.id})}}" class="list-group-item list-group-item-action flex-column align-items-start active">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1"> {{ post.title}} </h5>
+          <small> {{ post.creationDate | date('d/m/Y') }} </small>
+        </div>
+        <p class="mb-1"> {{ post.description|length > 50 ? post.description|slice(0, 50) ~ '...' :post.description  }}</p>
+        <span class="badge badge-info">
+        {% if post.status == 0 %}  
+            {{ " ouvert"}}
+        {% else %}
+            {{" fermé"}}
+        {% endif %}</span>
+      </a>
+    </div>
+    {% endfor %}
+  {% endif %}
+
+{% endblock %}
+
+
+
+{% block javascripts %}
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+  {% if app.user %}
+
+    function onClickModifyAccountBtn(event) {
+        console.log("onClickModifyAccountBtn function");
+        event.preventDefault();
+        const div = document.getElementById("account_infos");            
+        div.innerHTML = "<form id=\"modify_form\" action=\"{{ path('modify_account')}}\"><h1>Prénom</h1><input id=\"firstNameInput\" value=\"{{ app.user.firstName}}\" type=\"text\" name=\"firstName\" required=\"required\" maxlength=\"255\"><h1>Nom</h1><input id=\"lastNameInput\" value=\"{{ app.user.lastName}}\" type=\"text\" name=\"lastName\" required=\"required\" maxlength=\"255\"><h1>Email</h1><input id=\"emailInput\" value=\"{{ app.user.email}}\" type=\"text\" name=\"email\" required=\"required\" maxlength=\"255\"><h1>Activité</h1><textarea id=\"activityInput\"  type=\"text\" name=\"acitvity\" required=\"required\">{{ app.user.activity}}</textarea><br><br><button id=\"submit\" type=\"submit\" class=\"btn btn-success\">Enregister</button></form>"
+        
+        div.querySelector("#submit").addEventListener('click',onclickSubmitButton);
+    }
+
+    function onclickSubmitButton(){
+      console.log("onclicksubmitbutton function");
+      event.preventDefault();
+      const form =  document.querySelector('#modify_form');
+      const firstNameInput = form.querySelector('#firstNameInput').value;
+      const lastNameInput = form.querySelector('#lastNameInput').value;
+      const emailInput = form.querySelector('#emailInput').value;
+      const activityInput = form.querySelector('#activityInput').value;
+      const button = this;
+
+      // Interrupting input
+
+      button.innerHTML = "Modification...";
+      button.disabled = true;
+
+      // Extracting and packaging data  
+      const data = new FormData();
+      data.append('firstName',firstNameInput);
+      data.append('lastName',lastNameInput);
+      data.append('email',emailInput);
+      data.append('activity',activityInput);
+
+      // Sending data
+      const url = form.action;
+      const requestAjax = new XMLHttpRequest();
+      requestAjax.onreadystatechange = responseManager;
+      requestAjax.open('POST',url);
+      requestAjax.send(data);
+      function responseManager () {
+        console.log("responseManager function");
+        if (requestAjax.readyState === XMLHttpRequest.DONE) {
+          if (requestAjax.status === 200) {
+            const div = document.getElementById("account_infos");
+            div.innerHTML = `
+            <h1 class="display-3">${firstNameInput} ${lastNameInput}</h1>
+            <p class="lead">Membre depuis le {{ user.accountCreationDate | date('d/m/Y') }} </p>
+            <hr class="my-4"> 
+            <p>${activityInput}</p>
+            <button id="modify_account" class="btn btn-info">Modifier</button>`
+            document.getElementById("modify_account").addEventListener('click',onClickModifyAccountBtn);
+          } else {
+            form.innerHTML = "Erreur, veuillez actualiser la page";
+          }
+        }
+      }
+    }
+
+    document.getElementById("modify_account").addEventListener('click',onClickModifyAccountBtn);
+
+  {% endif %}
+  </script>
+{% endblock %}
