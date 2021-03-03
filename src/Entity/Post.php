@@ -37,13 +37,11 @@ class Post
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="posts")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $category;
 
     /**
      * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="posts")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $type;
 

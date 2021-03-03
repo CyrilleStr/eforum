@@ -8,6 +8,8 @@ use App\Entity\Comment;
 use App\Entity\CommentRate;
 use App\Form\CommentType;
 use App\Form\PostType;
+use App\Repository\CategoryRepository;
+use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,34 +68,28 @@ class PostController extends AbstractController
      }
 
      /**
-     * @Route("/post/list/{filter}", name="list_posts")
+     * @Route("/post/list/{cat}", name="list_posts")
      */
 
-    public function list($filter = "none"){
-        $repoPost = $this->getDoctrine()->getRepository(Post::class);     
+    public function list($cat = "all", PostRepository $repoPost, CategoryRepository $repoCat){
         $posts = array();
     
-        switch($filter){
-            case "asc":
-                // ...
-                break;
-            case "none":
+        switch($cat){
+            case "all":
                 $posts = $repoPost->findAll();
                 break;
             default:
-            // a category filter 
             $repoCat = $this->getDoctrine()->getRepository(Category::class);
             $categories = $repoCat->findAll();
             foreach($categories as $category){
-                if(strtolower($category->getName()) == strtolower($filter)){
+                if(strtolower($category->getName()) == strtolower($cat)){
                     $posts = $repoPost->findBy(
                         ['category' => $category],
                         ['title' => 'ASC']
                     );
                     break;
                 }
-            }
-            
+            }            
             break;
         }
 
