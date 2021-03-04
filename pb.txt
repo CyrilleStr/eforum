@@ -1,6 +1,8 @@
 Postcontroller: list() : impossible de trier par creation_date (type non reconnu)
+PostController: list() : afficher erreur quand cat n'est pas reconnu 
 A faire :
 - Post::trier par
+- gestion des erreurs
 - centre de notifs
 - fonction de recherche (utilisateur/post)
 - optimiser code CommentController::uprate et downrate (trop de répétition de code)

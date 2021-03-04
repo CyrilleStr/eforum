@@ -68,38 +68,41 @@ class PostController extends AbstractController
      }
 
      /**
-     * @Route("/post/list/{cat}", name="list_posts")
+     * @Route("/post/list/{categoryName}", name="list_posts")
      */
 
-    public function list($cat = "all", PostRepository $repoPost, CategoryRepository $repoCat){
+    public function list($categoryName = "all", PostRepository $repoPost, CategoryRepository $repoCat){
         $posts = array();
+        $more = false;
     
-        switch($cat){
+        switch($categoryName){
             case "all":
                 $posts = $repoPost->findAll();
                 break;
             default:
-            $repoCat = $this->getDoctrine()->getRepository(Category::class);
-            $categories = $repoCat->findAll();
-            foreach($categories as $category){
-                if(strtolower($category->getName()) == strtolower($cat)){
-                    $posts = $repoPost->findBy(
-                        ['category' => $category],
-                        ['title' => 'ASC']
-                    );
-                    break;
-                }
-            }            
+            $category = $repoCat->findBy(['name' => $categoryName]);
+            if($category == null){
+                $posts = $repoPost->findAll();
+                $categoryName = "all";            
+            }else{
+                $posts = $repoPost->findBy(['category' => $category]);
+            }
             break;
         }
 
-        if(sizeof($posts)>10){
-            $posts = array_slice($posts,0,10);
+        $size = count($posts);
+
+        if(sizeof($posts)>3){
+            $posts = array_slice($posts,0,3);
+            $more = true;
         }
 
         return $this->render('post/list.html.twig',[
-            'posts' => $posts
+            'posts' => $posts,
+            'size'=>  $size,
+            'category' => $categoryName,
+            'more' => $more
         ]);
-     }
+    }
 
 }
