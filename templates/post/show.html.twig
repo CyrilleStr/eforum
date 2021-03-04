@@ -107,7 +107,6 @@
                 const rateCount = document.getElementById(`ratecount${this.id}`);
                 axios.get(url).then(function(response){
                     console.log("response request:");
-                    console.log(response.data.rates);
                     rateCount.textContent = response.data.rates;
                 });
             }

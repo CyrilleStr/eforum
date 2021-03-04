@@ -1,0 +1,13 @@
+{% for post in posts %}
+<div class="jumbotron">
+  <h1 class="display-3">{{post.title}}</h1>
+  <hr class="my-4">
+  <p>{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</p>
+  <p class="lead">
+    <a class="btn btn-primary btn-lg" href="{{path('show_post', {id:post.id})}}" role="button">Afficher plus</a>
+  </p>
+</div>
+{% endfor %}
+{% if more == true %}
+<a href="{{path('list_posts', {startAt:printedPost})}}" id="show_more" class="btn btn-primary btn-sm">Afficher plus</a>
+{% endif %}

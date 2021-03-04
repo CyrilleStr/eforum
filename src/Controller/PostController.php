@@ -11,6 +11,8 @@ use App\Form\PostType;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use OutOfRangeException;
+use PhpParser\Node\Stmt\Break_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -68,12 +70,13 @@ class PostController extends AbstractController
      }
 
      /**
-     * @Route("/post/list/{categoryName}", name="list_posts")
+     * @Route("/post/list/{startAt}/{categoryName}/{filter}", name="list_posts",  defaults={"startAt": 0, "categoryName": "all", "filter":"none"}))
      */
 
-    public function list($categoryName = "all", PostRepository $repoPost, CategoryRepository $repoCat){
+    public function list($startAt, $categoryName, $filter, PostRepository $repoPost, CategoryRepository $repoCat){
         $posts = array();
         $more = false;
+        $pageCapacity = 3;
     
         switch($categoryName){
             case "all":
@@ -90,19 +93,42 @@ class PostController extends AbstractController
             break;
         }
 
-        $size = count($posts);
-
-        if(sizeof($posts)>3){
-            $posts = array_slice($posts,0,3);
-            $more = true;
+        switch($filter){
+            case "none":
+                break;
         }
 
-        return $this->render('post/list.html.twig',[
-            'posts' => $posts,
-            'size'=>  $size,
-            'category' => $categoryName,
-            'more' => $more
-        ]);
+        $size = count($posts);
+
+        if($startAt > 0){
+            $posts = array_slice($posts,$startAt);
+            if(sizeof($posts)>3){
+                $posts = array_slice($posts,0,$pageCapacity);
+                $more = true;
+            }
+            
+
+            return $this->render('post/showMore.html.twig',[
+                'posts' => $posts,
+                'more' => $more,
+                'printedPost' => $startAt + $pageCapacity
+            ]);
+
+        }else{
+            if(count($posts)>3){
+                $posts = array_slice($posts,0,$pageCapacity);
+                $more = true;
+            }
+    
+            return $this->render('post/list.html.twig',[
+                'posts' => $posts,
+                'size'=>  $size,
+                'category' => $categoryName,
+                'more' => $more
+            ]);
+        }
+
+        
     }
 
 }

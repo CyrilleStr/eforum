@@ -18,17 +18,42 @@
 </div>
 <h4> {{ posts|length }} résultats sur {{ size }} </h4>
 
+<div id="posts_div"> 
 {% for post in posts %}
 <div class="jumbotron">
   <h1 class="display-3">{{post.title}}</h1>
   <hr class="my-4">
   <p>{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</p>
   <p class="lead">
-    <a class="btn btn-primary btn-lg" href="{{path('show_post', {id:post.id})}}" role="button">Afficher plus</a>
+    <a class="btn btn-primary btn-lg" href="{{path('show_post', {id:post.id}) }}" role="button">Afficher plus</a>
   </p>
 </div>
 {% endfor %}
+</div>
+
 {% if more == true %}
-<a href="" class="btn btn-primary btn-sm">Afficher plus</a>
+<a href="{{path('list_posts', {startAt:posts|length})}}" id="show_more" class="btn btn-primary btn-sm">Afficher plus</a>
 {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+  console.log("debug");
+  function onClickShowMoreBtn(){
+    const btn = this;
+    event.preventDefault();
+    console.log('onClickShowMoreBtn');
+    const url = this.href;
+    btn.remove();
+    axios.get(url).then(function(response){
+      var newDiv = document.createElement("div");
+      newDiv.innerHTML = response.data;
+      document.getElementById("posts_div").appendChild(newDiv);
+      document.getElementById("show_more").addEventListener('click',onClickShowMoreBtn);
+    });
+  }
+  document.getElementById("show_more").addEventListener('click',onClickShowMoreBtn);
+  
+  </script>
 {% endblock %}
