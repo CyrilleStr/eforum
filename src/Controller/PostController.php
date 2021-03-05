@@ -12,6 +12,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use OutOfRangeException;
+use phpDocumentor\Reflection\Types\Boolean;
 use PhpParser\Node\Stmt\Break_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,52 +71,74 @@ class PostController extends AbstractController
      }
 
      /**
-     * @Route("/post/list/{startAt}/{categoryName}/{filter}", name="list_posts",  defaults={"startAt": 0, "categoryName": "all", "filter":"none"}))
+     * @Route("/post/list/{startAt}/{categoryName}/{orderBy}/{onlyPost}", name="list_posts",  defaults={"startAt": 0, "categoryName": "all", "orderBy":"none", "onlyPost":"false"}))
      */
 
-    public function list($startAt, $categoryName, $filter, PostRepository $repoPost, CategoryRepository $repoCat){
+    public function list($startAt, $categoryName, $orderBy, $onlyPost, PostRepository $repoPost, CategoryRepository $repoCat){
         $posts = array();
         $more = false;
         $pageCapacity = 3;
+
+        switch($orderBy){
+            case "none":
+                $orderBySQL = ['creationDate'=>"DESC"];
+                break;
+            case "dateAsc":
+                $orderBySQL = ['creationDate'=>"ASC"];
+                break;
+            case "dateDesc";
+                $orderBySQL = ['creationDate'=>"DESC"];
+                break;
+            case "titleAsc";
+                $orderBySQL = ['title'=>"ASC"];
+                break;
+            case "titleDesc";
+                $orderBySQL = ['title'=>"DESC"];
+                break;
+            case "statusOpen":
+                $orderBySQL = ['status'=>"ASC"];
+                break;
+            case "statusClose":
+                $orderBySQL = ['status'=>"DESC"];
+                break;
+            default:
+                $orderBySQL = ['creationDate'=>"DESC"];
+        }
     
         switch($categoryName){
             case "all":
-                $posts = $repoPost->findAll();
+                $categorySQL = [];
                 break;
             default:
-            $category = $repoCat->findBy(['name' => $categoryName]);
-            if($category == null){
-                $posts = $repoPost->findAll();
-                $categoryName = "all";            
-            }else{
-                $posts = $repoPost->findBy(['category' => $category]);
-            }
-            break;
+                $category = $repoCat->findBy(['name' => $categoryName]);
+                if($category == null){
+                    echo "error category name not found";
+                    die;
+                }
+                $categorySQL = ['category' => $category];
         }
 
-        switch($filter){
-            case "none":
-                break;
-        }
+        $posts = $repoPost->findBy($categorySQL,$orderBySQL);
 
         $size = count($posts);
 
-        if($startAt > 0){
+        if($onlyPost == "true"){
             $posts = array_slice($posts,$startAt);
-            if(sizeof($posts)>3){
+            if(sizeof($posts)>$pageCapacity){
                 $posts = array_slice($posts,0,$pageCapacity);
                 $more = true;
             }
             
-
             return $this->render('post/showMore.html.twig',[
                 'posts' => $posts,
                 'more' => $more,
-                'printedPost' => $startAt + $pageCapacity
+                'printedPost' => $startAt + $pageCapacity,
+                'orderBy' => $orderBy,
+                'categoryName' => $categoryName
             ]);
 
         }else{
-            if(count($posts)>3){
+            if(count($posts)>$pageCapacity){
                 $posts = array_slice($posts,0,$pageCapacity);
                 $more = true;
             }
@@ -124,7 +147,9 @@ class PostController extends AbstractController
                 'posts' => $posts,
                 'size'=>  $size,
                 'category' => $categoryName,
-                'more' => $more
+                'more' => $more,
+                'orderBy' => $orderBy,
+                'categoryName' => $categoryName
             ]);
         }
 
