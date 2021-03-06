@@ -34,10 +34,7 @@
                     <a class="nav-link" href="{{ path('list_users') }}">Utilisateurs</a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Rechercher">
-            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Rechercher</button>
-            </form>
+            <a href="{{path('search')}}" class="btn btn-primary">Rechercher</a>
             {% if app.user %}
             <a href="{{ path('app_logout') }}" class="btn btn-primary">Deconnexion</a>
             <a href="{{ path('my_account') }}" class="btn btn-primary">Mon Compte</a>

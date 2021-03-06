@@ -8,8 +8,11 @@ use App\Entity\CommentRate;
 use App\Entity\Post;
 use App\Entity\Type;
 use App\Entity\User;
+use App\Form\SearchPostType;
+use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -27,26 +30,25 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/new_type", name="new_type")
+     * @Route("/search", name="search")
      */
-    public function addType(EntityManagerInterface $manager){
-        $type = new Type;
-        $type->setName("Divers");
-        $manager->persist($type);
-        $manager->flush();
-        return $this->redirectToRoute('home');
-    }
+    public function search(Request $request, PostRepository $postRepo): Response
+    {
+        $form = $this->createForm(SearchPostType::class); 
+        $search = $form->handleRequest($request);
+        $posts = [];
 
-    /**
-     * @Route("/new_category", name="new_category")
-     */
-    public function addCategory(EntityManagerInterface $manager){
-        $category = new Category;
-        $category->setName("Entreprise");
-        $manager->persist($category);
-        $manager->flush();
-        return $this->redirectToRoute('home');
-    }
+        if($form->isSubmitted() && $form->isValid()){
+            $posts = $postRepo->search($search->get('key')->getData());
+        }
+
+        return $this->render('main/search.html.twig', [
+            'form' => $form->createView(),
+            'posts' => $posts,
+            'key' => $search->get('key')->getData()
+        ]);
+    } 
+
 
     /**
      * @Route("/test", name="test")
