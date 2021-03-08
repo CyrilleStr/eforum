@@ -1,0 +1,21 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Résultat pour "{{key}}"{% endblock %}
+{% block body %}
+    {% for post in posts %}
+        <div class="jumbotron">
+            <h1 class="display-3">{{post.title}}</h1>
+            <hr class="my-4">
+            <p>{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</p>
+            <span class="badge badge-info">
+                    {% if post.status == 0 %}  
+                            {{ " ouvert"}}
+                        {% else %}
+                            {{" fermé"}}
+                        {% endif %} </span><br><br>
+            <p class="lead">
+                <a class="btn btn-primary btn-lg" href="{{path('show_post', {id:post.id}) }}" role="button">Afficher plus</a>
+            </p>
+        </div>
+  {% endfor %}
+{% endblock %}

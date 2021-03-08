@@ -1,7 +1,6 @@
 A améliorer :
     - intégrer les recherches à PostController::list (pour l'affichage par page contenant $PageCapacity posts)
 A faire :
-- fonction de recherche (utilisateur/post)
 - centre de notifs https://www.youtube.com/watch?v=pV4jXfDECjU
 - gestion des erreurs
 - optimiser code CommentController::uprate et downrate (trop de répétition de code)
