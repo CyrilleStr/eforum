@@ -8,6 +8,7 @@ use App\Entity\CommentRate;
 use App\Entity\Post;
 use App\Entity\Type;
 use App\Entity\User;
+use App\Form\SearchPostType;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use App\Repository\TypeRepository;
@@ -26,9 +27,7 @@ class MainController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('main/index.html.twig', [
-            'controller_name' => 'MainController',
-        ]);
+        return $this->render('main/index.html.twig');
     }
 
     /**
