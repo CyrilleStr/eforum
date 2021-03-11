@@ -9,6 +9,7 @@ use App\Entity\Post;
 use App\Entity\Type;
 use App\Entity\User;
 use App\Repository\CategoryRepository;
+use App\Repository\PostRepository;
 use App\Repository\TypeRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,7 +62,6 @@ class MainController extends AbstractController
         echo '</pre>';
 
         die;
-
 
         return $this->render('main/test.html.twig', [
             'controller_name' => 'test',
