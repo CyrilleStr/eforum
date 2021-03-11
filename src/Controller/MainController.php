@@ -8,14 +8,9 @@ use App\Entity\CommentRate;
 use App\Entity\Post;
 use App\Entity\Type;
 use App\Entity\User;
-<<<<<<< HEAD
-use App\Form\SearchPostType;
-use App\Repository\PostRepository;
-=======
 use App\Repository\CategoryRepository;
 use App\Repository\TypeRepository;
 use App\Repository\UserRepository;
->>>>>>> fixtures
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
