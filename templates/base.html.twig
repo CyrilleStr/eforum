@@ -2,52 +2,45 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>
+        <title> {{ app.environment }}
         {% block title %}{% endblock %}</title>
-        {% block stylesheets %}<link rel="stylesheet" href="https://bootswatch.com/4/pulse/bootstrap.min.css">{% endblock %}
+        <link rel="stylesheet" href="{{ asset('css/base.css') }}">
+        {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{{ path('home')}}">e-Forum</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarColor03">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{path('list_posts', {categoryName:"Placements"})}}">Placements</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{path('list_posts', {categoryName:"e-Buisness"})}}">e-Buisness</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{path('list_posts', {categoryName:"Entreprise"})}}">Entreprise</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{ path('list_posts') }}">Posts</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{ path('create_post') }}">Nouveau post</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{ path('list_users') }}">Utilisateurs</a>
-                </li>
-            </ul>
-            <a href="{{path('search')}}" class="btn btn-primary">Rechercher</a>
-            {% if app.user %}
-            <a href="{{ path('app_logout') }}" class="btn btn-primary">Deconnexion</a>
-            <a href="{{ path('my_account') }}" class="btn btn-primary">Mon Compte</a>
-            {% else %}
-            <a href="{{ path('app_login') }}" class="btn btn-primary">Connexion</a>
-            {% endif %}
-        </div></nav>
+        <header>
+            <div id="top_header">
+                <a id="left_top_header" href="{{ path('home')}}">
+                    <div id="eforum"><span id="E">E</span>-FORUM</div>
+                    <div id="lfde">Le forum des entrepreneurs</div>
+                </a>
+                <div id="right_top_header">
+                <a href="{{ path('search') }}" id="search_icon"><img src="img/search_icon.png" alt="search_icon.png"></a>
+                    <a href="#" id="notif_icon"><img src="img/notif_icon.png" alt="notif_icon.png"></a>
+                    {% if app.user %}
+                        <a href="{{ path('app_logout') }}" id="account_icon"><img src="img/account_icon.png" alt="account_icon.png"></a>
+                    {% else %}
+                        <a href="{{ path('app_login') }}" id="account_icon"><img src="img/account_icon.png" alt="account_icon.png"></a>
+                    {% endif %}
+                </div>
+            </div>
+            <nav>
+                <a class="nav-link" href="{{path('list_posts', {categoryName:"Placements"})}}">Placements</a>
+                <a class="nav-link" href="{{path('list_posts', {categoryName:"e-Buisness"})}}">e-Buisness</a>
+                <a class="nav-link" href="{{path('list_posts', {categoryName:"Entreprise"})}}">Entreprise</a>
+                <a class="nav-link" href="{{ path('list_posts') }}">Posts</a>
+                <a class="nav-link" href="{{ path('create_post') }}">Nouveau post</a>
+                <a class="nav-link" href="{{ path('list_users') }}">Utilisateurs</a>
+            </nav>
+        </header>
+        <div class="page-content">
         {% block body %}{% endblock %}
-     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-     <hr class="my-4">
+        </div>
+     <footer>
+        <hr class="my-4">
         <p class="lead">Nik la peau lisse. All right reserved</p>
         <hr class="my-4">
-     </nav>
+     </footer>
         {% block javascripts %}{% endblock %}
     </body>
     {% block data %}{% endblock %}
