@@ -15,31 +15,34 @@
                     <div id="lfde">Le forum des entrepreneurs</div>
                 </a>
                 <div id="right_top_header">
-                <a href="{{ path('search') }}" id="search_icon"><img src="img/search_icon.png" alt="search_icon.png"></a>
-                    <a href="#" id="notif_icon"><img src="img/notif_icon.png" alt="notif_icon.png"></a>
+                <a href="{{ path('search') }}" id="search_icon"><img src="{{ asset('img/search_icon.png')}}" alt="search_icon.png"></a>
+                    <a href="#" id="notif_icon"><img src="{{ asset('img/notif_icon.png')}}" alt="notif_icon.png"></a>
                     {% if app.user %}
-                        <a href="{{ path('app_logout') }}" id="account_icon"><img src="img/account_icon.png" alt="account_icon.png"></a>
+                        <a href="{{ path('app_logout') }}" id="account_icon"><img src="{{ asset('img/account_icon.png')}}" alt="account_icon.png"></a>
                     {% else %}
-                        <a href="{{ path('app_login') }}" id="account_icon"><img src="img/account_icon.png" alt="account_icon.png"></a>
+                        <a href="{{ path('app_login') }}" id="account_icon"><img src="{{ asset('img/account_icon.png')}}" alt="account_icon.png"></a>
                     {% endif %}
                 </div>
             </div>
             <nav>
+                <a class="nav-link" href="{{ path('list_posts',  {filter:"dateDesc"}) }}">Les plus récents</a>
                 <a class="nav-link" href="{{path('list_posts', {categoryName:"Placements"})}}">Placements</a>
                 <a class="nav-link" href="{{path('list_posts', {categoryName:"e-Buisness"})}}">e-Buisness</a>
                 <a class="nav-link" href="{{path('list_posts', {categoryName:"Entreprise"})}}">Entreprise</a>
-                <a class="nav-link" href="{{ path('list_posts') }}">Posts</a>
-                <a class="nav-link" href="{{ path('create_post') }}">Nouveau post</a>
-                <a class="nav-link" href="{{ path('list_users') }}">Utilisateurs</a>
+                <a class="nav-link" id="new_post" href="{{ path('create_post') }}">Nouveau post</a>
             </nav>
         </header>
         <div class="page-content">
         {% block body %}{% endblock %}
         </div>
      <footer>
-        <hr class="my-4">
         <p class="lead">Nik la peau lisse. All right reserved</p>
         <hr class="my-4">
+        <div>
+            <a href="#">Contacts</a>
+            <a href="#">Données personnelles</a>
+            <a href="gdn.cyrillestr.com">BigMuscle</a>
+        </div>
      </footer>
         {% block javascripts %}{% endblock %}
     </body>
