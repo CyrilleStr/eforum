@@ -8,8 +8,14 @@ use App\Entity\CommentRate;
 use App\Entity\Post;
 use App\Entity\Type;
 use App\Entity\User;
+<<<<<<< HEAD
 use App\Form\SearchPostType;
 use App\Repository\PostRepository;
+=======
+use App\Repository\CategoryRepository;
+use App\Repository\TypeRepository;
+use App\Repository\UserRepository;
+>>>>>>> fixtures
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,7 +62,7 @@ class MainController extends AbstractController
 
     public function test(EntityManagerInterface $manager){
         echo '<pre>';
-        var_dump($a);
+        // var_dump($a);
         echo '</pre>';
 
         die;
@@ -68,9 +74,9 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/fixtures", name="fixtures") 
+     * @Route("/fixtures1", name="fixtures1") 
      */
-    public function fixtures(EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder){
+    public function fixtures1(EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder){
         $faker = \Faker\Factory::create('fr_FR');
         $users = [];
         for ($i=0; $i <10 ; $i++) {
@@ -102,6 +108,21 @@ class MainController extends AbstractController
             $manager->persist($type);
             $types[] = $type;
         }
+
+        $manager->flush();
+        echo 'finish: now call fixtures2';
+        die;
+    }
+
+    /**
+     * @Route("/fixtures2", name="fixtures2") 
+     */
+    public function fixtures2(EntityManagerInterface $manager, UserRepository $userRepo, TypeRepository $typeRepo, CategoryRepository $categoryRepo){
+        
+        $faker = \Faker\Factory::create('fr_FR');
+        $users = $userRepo->findAll();
+        $types = $typeRepo->findAll();
+        $categories = $categoryRepo->findAll();
 
         for ($i=0; $i < 10; $i++) { 
             $post = new Post();
