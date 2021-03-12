@@ -69,7 +69,6 @@ header {
 }
 
 #left_top_header{
-    width: 85%;
     font-family: Stencil Std;
     display: flex;
     align-items:flex-end;
@@ -99,15 +98,55 @@ header {
 }
 
 #right_top_header{
-    width: 15%;
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-end;
     align-items: center;
 }
 
+.search-box{
+    margin-right: 2rem;
+    background-color: #fff8e1;
+    height: 2rem;
+    border-radius: 2rem;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+    width: 2rem;
+    overflow: hidden;
+}
+
+.search-btn{
+    height: 2rem;
+    width: 2rem;
+    border: none;
+    background-color: #fff8e1;
+    padding: 0;
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
+.search-input{
+    border: none;
+    background-color: #fff8e1;
+    margin-left: 1rem;
+    outline: none;
+}
+
+.search-box:hover{
+    transition: all 0.8s;
+    width: 12rem;
+}
+
+.search-box:after{
+    width: 12rem;
+}
+
 #notif_icon, #account_icon, #search_icon{
-    height: 50%;
-    width: inherit;
+    height: 2rem;
+}
+
+#right_top_header a{
+    margin-right: 2rem;
 }
 
 #right_top_header img{
