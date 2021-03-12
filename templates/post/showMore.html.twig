@@ -1,19 +1,22 @@
-{% for post in posts %}
-<div class="jumbotron">
-  <h1 class="display-3">{{post.title}}</h1>
-  <hr class="my-4">
-  <p>{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</p>
-   <span class="badge badge-info">
-           {% if post.status == 0 %}  
-                {{ " ouvert"}}
-            {% else %}
-                {{" fermé"}}
-            {% endif %} </span><br><br>
-  <p class="lead">
-    <a class="btn btn-primary btn-lg" href="{{path('show_post', {id:post.id})}}" role="button">Afficher plus</a>
-  </p>
-</div>
-{% endfor %}
+ {% for post in posts %}
+    <div class="post-box">
+      <div class="top-post-box">
+        <h1 class="title">Sujet : {{post.title}}</h1>
+        <span class="badge-info">
+          {% if post.status == 0 %}  
+            {{ " ouvert"}}
+          {% else %}
+            {{" fermé"}}
+          {% endif %} 
+        </span>
+      </div>
+      <hr class="my-4">
+      <p class="time-box">{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</p>
+      <a class="btn-read" href="{{path('show_post', {id:post.id}) }}" role="button">Lire le post</a>
+    </div>
+  {% endfor %}
 {% if more == true %}
-<a href="{{path('list_posts', {startAt:printedPost,onlyPost:"true",orderBy:orderBy,categoryName:categoryName})}}" id="show_more" class="btn btn-primary btn-sm">Afficher plus</a>
+<div class="div-show-more">
+  <a href="{{path('list_posts', {startAt:printedPost,onlyPost:"true",orderBy:orderBy,categoryName:categoryName})}}" id="show_more" class="btn-show-more">Afficher plus</a>
+</div>
 {% endif %}

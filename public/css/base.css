@@ -9,8 +9,7 @@ body {
 }
 
 .page-content {
-    background-color:;
-    margin: 1rem;
+    margin: 2rem;
 }
 
 a{
@@ -20,6 +19,36 @@ a{
 p{
     margin: 0;
     padding: 0;
+}
+
+h1{
+    font-family: Arial Narrow;
+}
+
+.time-box{
+    color: #7E7878FF;
+}
+
+.badge-info{
+    background-color: #C5F8FF;
+    height: max-content;
+    width: max-content;
+    padding: 0.2rem;
+    border-radius: 0.5rem;
+}
+
+.btn-show-more{
+    background-color: #ffc107;
+    color: #fff8e1;
+    padding: 0.4rem;
+    margin: 1rem;
+    display: block;
+    width: max-content;
+}
+
+.div-show-more{
+    display: flex;
+    justify-content: center;
 }
 
 /* Header */ 
@@ -57,7 +86,7 @@ header {
 }
 
 #E{
-    color: #fbe9e7;
+    color: #ffc107 ;
     background-color: #8e24aa;
     padding: 0 3% 0 3%;
 }

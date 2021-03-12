@@ -1,45 +1,53 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %} <link rel="stylesheet" href="{{ asset('css/list_post.css') }}"> {% endblock %}
+
 {% block title %}
 {% if category == "all" %}Tous les posts{% else %}{{category}}{% endif %}
 {% endblock %}
 
 {% block body %}
 
-<div class="form-group">
-    <label for="exampleSelect1">Trier par</label>
-    <form method="post" id="order_by">
-      <select class="form-control" name="orderBy" id="sort_by">
-        <option value="dateDesc">Les plus récent</option>
-        <option value="dateAsc">Les plus anciens</option>
-        <option value="statusOpen">Status ouvert</option>
-        <option value="statusClose">Status fermé</option>
-        <option value="titleAsc">Par titre (A à Z)</option>
-        <option value="titleDesc">Par titre (Z à A)</option>
-      </select>
-    </form>
+<div class="sort_select_group">
+  <label for="exampleSelect1">Trier par</label>
+  <form method="post" id="order_by">
+    <select class="sort_select" name="orderBy" id="sort_by">
+      <div>
+        <option class="select_option" value="dateDesc">Les plus récent</option>
+        <option class="select_option" value="dateAsc">Les plus anciens</option>
+        <option class="select_option" value="statusOpen">Status ouvert</option>
+        <option class="select_option" value="statusClose">Status fermé</option>
+        <option class="select_option" value="titleAsc">Par titre (A à Z)</option>
+        <option class="select_option" value="titleDesc">Par titre (Z à A)</option>
+      </div>
+    </select>
+  </form>
 </div>
-<h4> <span id="printed_posts">{{ posts|length }} </span> résultats sur {{ size }} </h4>
 
-<div id="posts_div"> 
+<p class="out-of-results"> <span id="printed_posts">{{ posts|length }} </span> résultats sur {{ size }}</p>
+
+<div id="posts_div" class="post-div"> 
   {% for post in posts %}
-    <div class="jumbotron">
-      <h1 class="display-3">{{post.title}}</h1>
+    <div class="post-box">
+      <div class="top-post-box">
+        <h1 class="title">Sujet : {{post.title}}</h1>
+        <span class="badge-info">
+          {% if post.status == 0 %}  
+            {{ " ouvert"}}
+          {% else %}
+            {{" fermé"}}
+          {% endif %} 
+        </span>
+      </div>
       <hr class="my-4">
-      <p>{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</p>
-      <span class="badge badge-info">
-              {% if post.status == 0 %}  
-                    {{ " ouvert"}}
-                {% else %}
-                    {{" fermé"}}
-                {% endif %} </span><br><br>
-      <p class="lead">
-        <a class="btn btn-primary btn-lg" href="{{path('show_post', {id:post.id}) }}" role="button">Afficher plus</a>
-      </p>
+      <p class="time-box">{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</p>
+      <a class="btn-read" href="{{path('show_post', {id:post.id}) }}" role="button">Lire le post</a>
     </div>
   {% endfor %}
   {% if more == true %}
-    <a href="{{path('list_posts', {startAt:posts|length,onlyPost:"true",orderBy:orderBy,categoryName:categoryName})}}" id="show_more" class="btn btn-primary btn-sm">Afficher plus</a>
+  <div class="div-show-more">
+    <a href="{{path('list_posts', {startAt:posts|length,onlyPost:"true",orderBy:orderBy,categoryName:categoryName})}}" id="show_more" class="btn-show-more">Afficher plus</a>
+  </div>
   {% endif %}
 </div>
 
@@ -53,6 +61,7 @@
   const printedPosts = document.getElementById("printed_posts");
   var printedPostsCount = 3;
   const maxPrintedPostCount = {{size}};
+  
   function onClickShowMoreBtn(){
     const btn = this;
     event.preventDefault();

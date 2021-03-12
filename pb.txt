@@ -1,5 +1,6 @@
 A améliorer :
     - intégrer les recherches à PostController::list (pour l'affichage par page contenant $PageCapacity posts)
+    - actualiser printedPost après filtrer par 
 A faire :
 - centre de notifs https://www.youtube.com/watch?v=pV4jXfDECjU
 - gestion des erreurs
