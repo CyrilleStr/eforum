@@ -15,6 +15,10 @@
                     <div id="lfde">Le forum des entrepreneurs</div>
                 </a>
                 <div id="right_top_header">
+                    {# <form action="{{path('search')}}" method="POST">
+                        <input type="text" placeholder="Rechercher" class="form-control" name="key">
+                        <button type="submit" class="btn btn-primary">Rechercher</button>
+                    </form> #}
                     <a href="{{ path('search') }}" id="search_icon"><img src="{{ asset('img/search_icon.png')}}" alt="search_icon.png"></a>
                     <a href="#" id="notif_icon"><img src="{{ asset('img/notif_icon.png')}}" alt="notif_icon.png"></a>
                     {% if app.user %}

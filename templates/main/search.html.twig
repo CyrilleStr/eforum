@@ -1,10 +1,12 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Recherche{% endblock %}
+{% block title %}{% if key == null %}Recherche{% else %} Recherche pour "{{ key}}" {% endif %} {% endblock %}
 
 {% block body %}
-
-    {{ form(form)}}
+    <form action="" method="POST">
+        <input type="text" placeholder="Rechercher" class="form-control" name="key" value="{% if key == null %}{% else %} {{ key}} {% endif %}">
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+    </form>
     {% if posts != null %}
         {% for post in posts %}
 

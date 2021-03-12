@@ -35,18 +35,18 @@ class MainController extends AbstractController
      */
     public function search(Request $request, PostRepository $postRepo): Response
     {
-        $form = $this->createForm(SearchPostType::class); 
-        $search = $form->handleRequest($request);
         $posts = [];
 
-        if($form->isSubmitted() && $form->isValid()){
-            $posts = $postRepo->search($search->get('key')->getData());
+        if(isset($_POST['key'])){
+            $key = $_POST['key'];
+            $posts = $postRepo->search($key);
+        }else{
+            $key = null;
         }
 
         return $this->render('main/search.html.twig', [
-            'form' => $form->createView(),
             'posts' => $posts,
-            'key' => $search->get('key')->getData()
+            'key' => $key
         ]);
     } 
 
