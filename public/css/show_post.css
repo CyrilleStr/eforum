@@ -1,0 +1,83 @@
+.post{
+    padding: 1rem;
+    border: 0.2rem solid #8e24aa;
+}
+
+.badge-info{
+    margin-top: 1rem;
+}
+
+.description{
+    font-family: Stencil Std;
+}
+
+legend{
+    font-size: 2rem;
+}
+
+.comment-group{
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #fff8e1;
+}
+
+.comment-div{
+    background-color: #f5f5f5;
+    margin: 1rem;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.comment-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-header-right{
+    display: flex;
+    align-items: center;
+}
+
+.comment-date{
+    font-style: italic;
+    padding-right: 0.3rem;
+}
+
+.comment-author{
+    font: 1.5rem;
+    font-weight: bold;
+}
+
+.comment-content{
+    margin: 1rem 0 1rem 0;
+}
+
+.comment-rate-group{
+    height: 1rem;
+    padding: 0.3rem;
+    background-color: #ffc107;
+    border-radius: 1rem;
+    width: max-content;
+}
+
+.comment-rate-group img{
+    height: 100%;
+}
+
+.form-group{
+    display: flex;
+    flex-direction: column;
+}
+
+.form-control{
+    border: none;
+    background-color: #FFFFFF;
+    outline: none;
+    padding: 1rem;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group .btn-primary{
+    width: max-content;
+}

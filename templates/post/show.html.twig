@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/show_post.css')}}">
+{% endblock %}
+
 {% block title %}
 {% if post != NULL %}
     {{ post.title }}
@@ -16,56 +20,59 @@
 
 {% else %}
 
-    <div class="jumbotron">
-    <h1 class="display-3">{{ post.title }}</h1>
-        <p class="lead">{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ "à " ~ post.creationDate | date('H:i') ~ ')' }} </p>
+    <div class="post">
+        <h1 class="display-3">{{ post.title }}</h1>
+        <p class="lead">Par {{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ "à " ~ post.creationDate | date('H:i') ~ ')' }} </p>
         <p class="lead">{{ "Catégorie : " ~ post.category.name }} </p>
         <hr class="my-4">
-        <p>{{ post.description | raw }}</p>
-        <p class="lead">
-           <span class="badge badge-info">
+        <p class="description">{{ post.description | raw }}</p>
+        <p class="badge-info">
            {% if post.status == 0 %}  
                 {{ " ouvert"}}
             {% else %}
                 {{" fermé"}}
-            {% endif %} </span>
+            {% endif %}
         </p>
     </div>
 
-    <fieldset>
-        <legend>Commentaires</legend>
+    <fieldset class="comment-group">
+        <legend>Discussions</legend>
         {% if app.user %}
-            <div class="form-group">
-                <form action="{{path('create_comment',{'id':post.id})}}" method="POST" id="add_comment_form">
-                    <textarea name="content" cols="30" rows="3" placeholder="Ajoutez votre commentaire..." class="form-control"></textarea>
-                    <button type="submit" class="btn btn-primary" id="submit_button">Ajouter</button>
-                </form>
-            </div>
+            <form class="form-group" action="{{path('create_comment',{'id':post.id})}}" method="POST" id="add_comment_form">
+                <textarea name="content" cols="100" rows="3" placeholder="Ajoutez votre commentaire..." class="form-control"></textarea>
+                <button type="submit" class="btn-primary" id="submit_button">Ajouter</button>
+            </form>
         {% else %}
-            <div class="alert alert-dismissible alert-warning">
-                <h4 class="alert-heading">Connectez-vous pour ajouter un commentaire</h4>
-                <p class="mb-0"><a href="{{path('app_login')}}" class="alert-link">Cliquez-ici pour vous connecter</a>.</p>
+            <div class="badge-warning">
+                <p class=""><b><a href="{{path('app_login')}}" class="alert-link">Connectez-vous</a></b> pour ajouter un commentaire</p>
             </div>
         {% endif %}
         
         <div id="comments_area">
         {% for comment in comments %}
-            <div class="card border-dark mb-3" style="max-width: 100%;" id="commentDiv{{comment.id}}">
-                <div class="card-header">
-                    {% if comment.author == app.user %}
-                        <a class="close" id="{{comment.id}}" href="{{path('delete_comment',{id:comment.id})}}">&times;</a>
-                    {% endif %}
-                    {{comment.creationDate | date('d/m/Y') ~ " à " ~ comment.creationDate | date('H:i')}} 
-                    {% if comment.updateDate != NULL %}
-                        {{ ' (modifié le ' ~ comment.updateDate | date('d/m/Y') ~ " à " ~ comment.updateDate | date('H:i') ~ ')'}}
-                    {% endif %}
+            <div class="comment-div" id="commentDiv{{comment.id}}">
+                <div class="comment-header">
+                    <p class="comment-author">{{comment.author.firstName ~ ' ' ~ comment.author.lastName}}</p>
+                    <div class="comment-header-right">
+                        <p class="comment-date">
+                        {{comment.creationDate | date('d/m/Y') ~ " à " ~ comment.creationDate | date('H:i')}} 
+                        {% if comment.updateDate != NULL %}
+                            {{ ' (modifié le ' ~ comment.updateDate | date('d/m/Y') ~ " à " ~ comment.updateDate | date('H:i') ~ ')'}}
+                        {% endif %}
+                        </p>
+                        {% if comment.author == app.user %}
+                            <a class="delete-comment" href="{{ path('delete_comment',{id:comment.id}) }}"><img src="{{ asset('img/garbage.png') }}" alt="garbage.png"></a>
+                        {% endif %}
+                    </div>
+                    
                 </div>
-                <div class="card-body">
-                    <h4 class="card-title">{{comment.author.firstName ~ ' ' ~ comment.author.lastName}}</h4>
-                    <p class="card-text">{{comment.content | raw}}</p>
-                    <span> Utilité : <strong id="ratecount{{comment.id}}"> {{comment.sumCommentRates}} </strong></span>
-                    <a {% if app.user %} href="{{path('comment_uprate',{'id':comment.id})}}" {% else %}title="Connectez-vous pour réagir"{% endif %}class="js-uprate btn btn-success" id="{{comment.id}}">Utile</a>
-                    <a {% if app.user %} href="{{path('comment_downrate',{'id':comment.id})}}" {% else %}title="Connectez-vous pour réagir"{% endif %} class="js-downrate btn btn-danger" id="{{comment.id}}">Inutile</a>
+                <div>
+                    <p class="comment-content">{{comment.content | raw}}</p>
+                    <div class="comment-rate-group">
+                        <a {% if app.user %} href="{{ path('comment_uprate',{'id':comment.id}) }}" {% else %}title="Connectez-vous pour réagir" href="{{ path('app_login') }}"{% endif %} class="js-uprate btn-up" id="{{comment.id}}"><img src="{{ asset("img/up.png") }}" alt="up.png"></a>
+                        <span id="ratecount{{comment.id}}"> {{comment.sumCommentRates}}</span>
+                        <a {% if app.user %} href="{{path('comment_downrate',{'id':comment.id})}}" {% else %}title="Connectez-vous pour réagir" href="{{ path('app_login') }}"{% endif %} class="js-downrate btn-down" id="{{comment.id}}"> <img src="{{ asset("img/down.png") }}" alt="up.png"></a>
+                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -143,17 +150,24 @@
                 newDiv.setAttribute('class',"card border-dark mb-3");
                 newDiv.setAttribute('style',"max-width: 100%;");
                 newDiv.innerHTML = `
-                <div class="card-header">
-                    ${response.creationDate}
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title">${userFirstName} ${userLastName}</h4>
-                    <p class="card-text">${content}</p>
-                    <span> Utilité : <strong id="ratecount${response.id}">0</strong></span>
-                    <a href="/comment/uprate/${response.id}" class="js-uprate btn btn-success" id="${response.id}">Utile</a>
-                    <a href="/comment/downrate/${response.id}" class="js-downrate btn btn-danger" id="${response.id}">Inutile</a>
-                </div>
-                `;
+                <div class="comment-div" id="commentDiv${response.id}">
+                    <div class="comment-header">
+                        <p class="comment-author">${userFirstName} ${userLastName}</p>
+                        <a class="close" id="${response.id}" href="/comment/delete/${response.id}">&times;</a>
+                        <p class="comment-date">
+                        ${response.creationDate}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="comment-content">${content}</p>
+                        <div class="comment-rate-group">
+                            <a href="/comment/uprate/${response.id}" class="js-uprate btn-up" id="${response.id}"><img src="img/up.png" alt="up.png"></a>
+                            <span id="ratecount${response.id}">0</span>
+                            <a href="/comment/downrate/${response.id}" class="js-downrate btn-down" id="${response.id}"> <img src="img/down.png" alt="up.png"></a>
+                        </div>
+                    </div>
+                </div>`
+
                 newDiv.querySelector('a.js-uprate').addEventListener('click',onClickUprateBtn);
                 newDiv.querySelector('a.js-downrate').addEventListener('click',onClickDownrateBtn);
                 document.getElementById("comments_area").prepend(newDiv);
@@ -174,7 +188,7 @@
                 axios.get(url).then(function(response){
                     console.log("response request message:");
                     if(response.data.code == 200){
-                        document.querySelector(`div#commentDiv${id}`).remove();
+                        document.getElementById(`commentDiv${id}`).remove();
                     }else{
                         this.innerHTML = "Error";
                     }
@@ -196,7 +210,7 @@
         
         document.querySelector("#submit_button").addEventListener('click',onclickSubmitButton);
 
-        document.querySelectorAll('a.close').forEach( 
+        document.querySelectorAll('.delete-comment').forEach( 
             link => link.addEventListener('click',onClickDeleteBtn)
         );
 

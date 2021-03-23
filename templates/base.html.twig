@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title> {{ app.environment }}
         {% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="{{ asset('css/body.css') }}">
         <link rel="stylesheet" href="{{ asset('css/base.css') }}">
         {% block stylesheets %}{% endblock %}
     </head>
@@ -19,13 +20,23 @@
                         <input autocomplete="off" type="text" placeholder="Rechercher" class="search-input" name="key">
                         <button type="submit" class="search-btn"><img src="{{ asset('img/search_icon.png')}}" alt="search_icon.png"></button>
                     </form>
-                   
-                    <a href="#" id="notif_icon"><img src="{{ asset('img/notif_icon.png')}}" alt="notif_icon.png"></a>
-                    {% if app.user %}
-                        <a href="{{ path('app_logout') }}" id="account_icon"><img src="{{ asset('img/account_icon.png')}}" alt="account_icon.png"></a>
-                    {% else %}
-                        <a href="{{ path('app_login') }}" id="account_icon"><img src="{{ asset('img/account_icon.png')}}" alt="account_icon.png"></a>
-                    {% endif %}
+                    <a href="#" class="notif-icon"><img src="{{ asset('img/notif_icon.png')}}" alt="notif_icon.png"></a>
+                    <div class="dropdown-account">
+                        <button onclick="accountDropdownToggle();" class="account-icon" id="accout-btn"><img src="{{ asset('img/account_icon.png')}}" alt="account_icon.png"></button>
+                        {% if app.user %}
+                            <ul>
+                                <span><img src="{{ asset('img/account_icon.png') }}" alt="profil_picture.png"></span>
+                                <h1>{{ app.user.firstName}} {{ app.user.lastName }}</h1>
+                                <a href="{{ path('my_account') }}">Mon profil</a>
+                                <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                            </ul>
+                        {% else %}
+                            <ul>
+                                <a href="{{ path('app_login') }}">Connexion</a>
+                                <a href="{{ path('registration') }}">Inscription</a>
+                            </ul>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <nav>
@@ -45,9 +56,18 @@
             <div>
                 <a href="#">Contacts</a>
                 <a href="#">Données personnelles</a>
-                <a href="gdn.cyrillestr.com">BigMuscle</a>
+                <a href="http://gdn.cyrillestr.com">BigMuscle</a>
             </div>
         </footer>
+        <script>
+            const dropdown = document.querySelector('.dropdown-account');
+
+            function accountDropdownToggle(){
+                console.log("function");
+                dropdown.classList.toggle('active');
+            }
+
+        </script>
         {% block javascripts %}{% endblock %}
     </body>
 </html>

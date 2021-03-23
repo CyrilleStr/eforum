@@ -1,61 +1,8 @@
-/* Body */
-
-body {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    background-color:  #F5F5F5;
-}
-
-.page-content {
-    margin: 2rem;
-}
-
-a{
-    text-decoration: none;
-}
-
-p{
-    margin: 0;
-    padding: 0;
-}
-
-h1{
-    font-family: Arial Narrow;
-}
-
-.time-box{
-    color: #7E7878FF;
-}
-
-.badge-info{
-    background-color: #C5F8FF;
-    height: max-content;
-    width: max-content;
-    padding: 0.2rem;
-    border-radius: 0.5rem;
-}
-
-.btn-show-more{
-    background-color: #ffc107;
-    color: #fff8e1;
-    padding: 0.4rem;
-    margin: 1rem;
-    display: block;
-    width: max-content;
-}
-
-.div-show-more{
-    display: flex;
-    justify-content: center;
-}
-
 /* Header */ 
 
 header {
     width: 100%;
-    height: 100px;
+    height: 100%;
     font-family: sans-serif;
 }
 
@@ -66,6 +13,7 @@ header {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    margin-bottom: 1rem;
 }
 
 #left_top_header{
@@ -103,7 +51,10 @@ header {
     align-items: center;
 }
 
+/* Search Box */
+
 .search-box{
+    transition: 0.8s;
     margin-right: 2rem;
     background-color: #fff8e1;
     height: 2rem;
@@ -133,24 +84,83 @@ header {
 }
 
 .search-box:hover{
-    transition: all 0.8s;
+    transition: 0.8s;
     width: 12rem;
 }
 
-.search-box:after{
+.search-box:after:hover{
     width: 12rem;
 }
 
-#notif_icon, #account_icon, #search_icon{
+.notif-icon, .account-icon,  .dropdown-account, .search-box{
     height: 2rem;
-}
-
-#right_top_header a{
+    width: 2rem;
     margin-right: 2rem;
 }
 
 #right_top_header img{
     height: 100%;
+}
+
+/* dropdown-account */
+
+.dropdown-account{
+    position: relative;
+    overflow: hidden;
+    transition: 0.5s;
+}
+
+.dropdown-account.active{
+    transition: 0.5s;
+    overflow: visible;
+}
+
+.dropdown-account ul{
+    margin: 0.5rem 0 0 0;
+    background-color: #fff8e1;
+    border-radius: 1rem;
+    float: right;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* .dropdown-account ul li::before{
+    z-index: 100;
+    position: absolute;
+    background-color: #fff8e1;
+    content: '';
+    top: 2.35rem;
+    right: 0.4rem;
+    width: 20px;
+    height: 20px;
+    transform: rotate(45deg);
+} */
+
+.dropdown-account ul a{
+    z-index: 0;
+    transition: 0.3s;
+    list-style-type: none;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.3rem 1rem;
+}
+
+.dropdown-account ul a:hover{
+    transition: 0.3s;
+    background-color: #ffc107;
+    border-radius: 3rem;
+}
+
+.dropdown-account ul span{
+    height: 3rem;
+}
+
+.dropdown-account h1{
+    width: max-content;
 }
 
 /* Header Bottom */

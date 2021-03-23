@@ -1,13 +1,18 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %} <link rel="stylesheet" href="{{ asset('css/form.css') }}"> {% endblock %}
+
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-<h1>Inscription sur le site</h1>
-{{form_start(form)}}
-{{form_widget(form)}}
-<button type="submit" class="btn btn-succes">Inscription</button>
-{{form_end(form)}}
-
+<div class="container">
+    <div class="form-group">
+        <h1>Inscription sur le site</h1>
+        {{form_start(form)}}
+        {{form_widget(form)}}
+        <button type="submit" class="btn-primary">Inscription</button>
+        {{form_end(form)}}
+    </div>
+</div>
 
 {% endblock %}

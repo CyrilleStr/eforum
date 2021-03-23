@@ -1,0 +1,31 @@
+.search-box-body{
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff8e1;
+    height: 3rem;
+    width: 30rem;
+    border-radius: 2rem;
+    
+    padding: 1rem;
+}
+
+.serach-input-body{
+    background-color: #fff8e1;
+    border: none;
+    width: 30rem;
+    outline: none;
+}
+
+.search-btn-body {
+    background-color: #fff8e1;
+    height: 3rem;
+}
+
+.search-btn-body img{
+    height: 3rem;
+}
+
+.search-box-body-div{
+    display: flex;
+    justify-content: center;
+}

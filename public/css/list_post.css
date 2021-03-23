@@ -15,7 +15,8 @@
 }
 
 .out-of-results{
-    border: 0.2rem solid #ffc107;
+    border: 0.2rem solid #8e24aa;
+    border-radius: 0.2rem;
     padding: 0.2rem 0.4rem 0.2rem 0.4rem;
     width: max-content;
 }

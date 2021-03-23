@@ -1,30 +1,37 @@
 {% extends "base.html.twig" %}
 
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('css/list_post.css') }}">
+<link rel="stylesheet" href="{{ asset('css/search_post.css') }}">
+{% endblock %}
+
 {% block title %}{% if key == null %}Recherche{% else %} Recherche pour "{{ key}}" {% endif %} {% endblock %}
 
 {% block body %}
-    <form action="" method="POST">
-        <input type="text" placeholder="Rechercher" class="form-control" name="key" value="{% if key == null %}{% else %} {{ key}} {% endif %}">
-        <button type="submit" class="btn btn-primary">Rechercher</button>
-    </form>
+    <div class="search-box-body-div">
+        <form class="search-box-body" action="" search method="POST">
+            <input type="text" placeholder="Rechercher" class="serach-input-body" name="key" value="{% if key == null %}{% else %} {{ key}} {% endif %}">
+            <button type="submit" class="search-btn-body"><img src="{{ asset('img/search_icon.png')}}" alt="search_icon.png"></button>
+        </form>
+    </div> 
+    
     {% if posts != null %}
         {% for post in posts %}
-
-            <div class="jumbotron">
-                <h1 class="display-3">{{post.title}}</h1>
-                <hr class="my-4">
-                <p>{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</p>
-                <span class="badge badge-info">
-                        {% if post.status == 0 %}  
-                            {{ " ouvert"}}
-                        {% else %}
-                            {{" fermé"}}
-                        {% endif %} </span><br><br>
-                <p class="lead">
-                <a class="btn btn-primary btn-lg" href="{{path('show_post', {id:post.id}) }}" role="button">Afficher plus</a>
-                </p>
+            <div class="post-box">
+            <div class="top-post-box">
+                <h1 class="title">Sujet : {{post.title}}</h1>
+                <span class="badge-info">
+                {% if post.status == 0 %}  
+                    {{ " ouvert"}}
+                {% else %}
+                    {{" fermé"}}
+                {% endif %} 
+                </span>
             </div>
-
+            <hr class="my-4">
+            <p class="time-box">{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</p>
+            <a class="btn-read" href="{{path('show_post', {id:post.id}) }}" role="button">Lire le post</a>
+            </div>
         {% endfor %}
     {% else %}
         {% if key != null %}
