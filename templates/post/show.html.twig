@@ -61,7 +61,7 @@
                         {% endif %}
                         </p>
                         {% if comment.author == app.user %}
-                            <a class="delete-comment" href="{{ path('delete_comment',{id:comment.id}) }}"><img src="{{ asset('img/garbage.png') }}" alt="garbage.png"></a>
+                            <a class="delete-comment" id="{{comment.id}}" href="{{ path('delete_comment',{id:comment.id}) }}"><img src="{{ asset('img/garbage.png') }}" alt="garbage.png"></a>
                         {% endif %}
                     </div>
                     
@@ -184,11 +184,11 @@
             const url = this.href;
             const id = this.id;
             if(url != null){
-                console.log("url !=NULL");
                 axios.get(url).then(function(response){
                     console.log("response request message:");
+                    console.log(response.data);
                     if(response.data.code == 200){
-                        document.getElementById(`commentDiv${id}`).remove();
+                        document.getElementById(`commentDiv${id}`).remove()
                     }else{
                         this.innerHTML = "Error";
                     }
