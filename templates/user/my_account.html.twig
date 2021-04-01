@@ -4,16 +4,21 @@
 Mon Compte
 {% endblock %}
 
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('css/my_account.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/list_post.css') }}">
+{% endblock %}
+
 {% block body %}
 
-  <div class="jumbotron">
+  <div class="big-box">
     <div id="account_infos">
       <h1 class="display-3">{{ user.firstName ~ ' ' ~ user.lastName}}</h1>
       <p class="lead">Membre depuis le {{ user.accountCreationDate | date('d/m/Y') }} </p>
       {% if user.activity != null %}
       <hr class="my-4"> 
       <p> {{ user.activity }} </p>
-      <button id="modify_account" class="btn btn-info">Modifier</button>
+      <button id="modify_account" class="btn-primary">Modifier</button>
       {% endif %}
     </div>
   </div>
@@ -23,23 +28,25 @@ Mon Compte
     </div>
   {% else %}
     <h1>Vos derniers postes</h1>
-    {% for post in user.posts %}
-    <div class="list-group">
-      <a href="{{ path('show_post',{id:post.id})}}" class="list-group-item list-group-item-action flex-column align-items-start active">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1"> {{ post.title}} </h5>
-          <small> {{ post.creationDate | date('d/m/Y') }} </small>
+    <div class="post-container">
+      {% for post in user.posts %}
+      <div class="post-box">
+        <div class="top-post-box">
+          <h1 class="title">Sujet : {{post.title}}</h1>
+          <span class="badge-info">
+            {% if post.status == 0 %}  
+              {{ " ouvert"}}
+            {% else %}
+              {{" fermé"}}
+            {% endif %} 
+          </span>
         </div>
-        <p class="mb-1"> {{ post.description|length > 50 ? post.description|slice(0, 50) ~ '...' :post.description  }}</p>
-        <span class="badge badge-info">
-        {% if post.status == 0 %}  
-            {{ " ouvert"}}
-        {% else %}
-            {{" fermé"}}
-        {% endif %}</span>
-      </a>
+        <hr class="my-4">
+        <p class="time-box">{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</p>
+        <a class="btn-read" href="{{path('show_post', {id:post.id}) }}" role="button">Lire le post</a>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   {% endif %}
 
 {% endblock %}
@@ -55,7 +62,7 @@ Mon Compte
         console.log("onClickModifyAccountBtn function");
         event.preventDefault();
         const div = document.getElementById("account_infos");            
-        div.innerHTML = "<form id=\"modify_form\" action=\"{{ path('modify_account')}}\"><h1>Prénom</h1><input id=\"firstNameInput\" value=\"{{ app.user.firstName}}\" type=\"text\" name=\"firstName\" required=\"required\" maxlength=\"255\"><h1>Nom</h1><input id=\"lastNameInput\" value=\"{{ app.user.lastName}}\" type=\"text\" name=\"lastName\" required=\"required\" maxlength=\"255\"><h1>Email</h1><input id=\"emailInput\" value=\"{{ app.user.email}}\" type=\"text\" name=\"email\" required=\"required\" maxlength=\"255\"><h1>Activité</h1><textarea id=\"activityInput\"  type=\"text\" name=\"acitvity\" required=\"required\">{{ app.user.activity}}</textarea><br><br><button id=\"submit\" type=\"submit\" class=\"btn btn-success\">Enregister</button></form>"
+        div.innerHTML = "<form id=\"modify_form\" action=\"{{ path('modify_account')}}\"><h1>Prénom</h1><input id=\"firstNameInput\" value=\"{{ app.user.firstName}}\" type=\"text\" name=\"firstName\" required=\"required\" maxlength=\"255\"><h1>Nom</h1><input id=\"lastNameInput\" value=\"{{ app.user.lastName}}\" type=\"text\" name=\"lastName\" required=\"required\" maxlength=\"255\"><h1>Email</h1><input id=\"emailInput\" value=\"{{ app.user.email}}\" type=\"text\" name=\"email\" required=\"required\" maxlength=\"255\"><h1>Activité</h1><textarea id=\"activityInput\"  type=\"text\" name=\"acitvity\" required=\"required\">{{ app.user.activity}}</textarea><br><br><button id=\"submit\" type=\"submit\" class=\"btn-primary\">Enregister</button></form>"
         
         div.querySelector("#submit").addEventListener('click',onclickSubmitButton);
     }
@@ -98,7 +105,7 @@ Mon Compte
             <p class="lead">Membre depuis le {{ user.accountCreationDate | date('d/m/Y') }} </p>
             <hr class="my-4"> 
             <p>${activityInput}</p>
-            <button id="modify_account" class="btn btn-info">Modifier</button>`
+            <button id="modify_account" class="btn-primary">Modifier</button>`
             document.getElementById("modify_account").addEventListener('click',onClickModifyAccountBtn);
           } else {
             form.innerHTML = "Erreur, veuillez actualiser la page";

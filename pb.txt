@@ -1,7 +1,7 @@
 A améliorer :
     - intégrer les recherches à PostController::list (pour l'affichage par page contenant $PageCapacity posts)
-    - actualiser printedPost après filtrer par
     - ajouter photo aux utilisateurs
+    - centraliser affichage list_post
     
 A faire :
 - centre de notifs https://www.youtube.com/watch?v=pV4jXfDECjU
