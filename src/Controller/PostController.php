@@ -6,11 +6,13 @@ use App\Entity\Post;
 use App\Entity\Category;
 use App\Entity\Comment;
 use App\Entity\CommentRate;
+use APP\Entity\Notif;
 use App\Form\CommentType;
 use App\Form\PostType;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use OutOfRangeException;
 use phpDocumentor\Reflection\Types\Boolean;
 use PhpParser\Node\Stmt\Break_;
@@ -24,7 +26,11 @@ class PostController extends AbstractController
     /**
      * @Route("/post/create", name="create_post")
      */
-    public function create(Request $request, EntityManagerInterface $manager)    {
+    public function create(Request $request, EntityManagerInterface $manager, PostRepository $postRepo) {
+
+        $user = $this->getUser();
+        if($user == null) return $this->redirectToRoute('app_login');
+
         $post = new Post();
         $form  = $this->createForm(PostType::class,$post);
         $editMode = false;
@@ -32,12 +38,34 @@ class PostController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+            // Create post
             $post->setCreationDate(new \DateTime);
             $post->setStatus(0);
             $post->setAuthor($this->getUser());
             $manager->persist($post);
             $manager->flush();
-            return $this->redirectToRoute('show_post',['id' => $post->getId()]);
+
+            // Send notifs
+            
+            $followers = $user->getUsersFollower();
+
+            if($followers != null) {
+                $postId = $postRepo->find($post)->getId();
+                $userFirstName = $user->getFirstName();
+                $userLastName = $user->getLastName();
+
+                foreach ($followers as $follower) {
+                    $notif = new Notif();
+                    $notif->setMsg( $userFirstName . ' ' . $userLastName . " a publié un nouveau post !");
+                    $notif->setLink("/post/show/" . $postId);
+                    $manager->persist($notif);
+                    $follower->addNotif($notif);
+                    $manager->persist($follower);
+                }
+                $manager->flush();
+            }
+
+            return $this->redirectToRoute('show_post',  ['id' => $post->getId()]);
         }
         
         return $this->render('post/create.html.twig', [

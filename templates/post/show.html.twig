@@ -22,7 +22,7 @@
 
     <div class="post">
         <h1 class="display-3">{{ post.title }}</h1>
-        <p class="lead">Par {{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ "à " ~ post.creationDate | date('H:i') ~ ')' }} </p>
+        <p class="lead">Par {{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }} </p>
         <p class="lead">{{ "Catégorie : " ~ post.category.name }} </p>
         <hr class="my-4">
         <p class="description">{{ post.description | raw }}</p>
@@ -83,7 +83,6 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         console.log("debug :");
         {% if app.user %}
@@ -161,9 +160,9 @@
                     <div>
                         <p class="comment-content">${content}</p>
                         <div class="comment-rate-group">
-                            <a href="/comment/uprate/${response.id}" class="js-uprate btn-up" id="${response.id}"><img src="img/up.png" alt="up.png"></a>
+                            <a href="/comment/uprate/${response.id}" class="js-uprate btn-up" id="${response.id}"><img src="/img/up.png" alt="up.png"></a>
                             <span id="ratecount${response.id}">0</span>
-                            <a href="/comment/downrate/${response.id}" class="js-downrate btn-down" id="${response.id}"> <img src="img/down.png" alt="up.png"></a>
+                            <a href="/comment/downrate/${response.id}" class="js-downrate btn-down" id="${response.id}"> <img src="/img/down.png" alt="up.png"></a>
                         </div>
                     </div>
                 </div>`

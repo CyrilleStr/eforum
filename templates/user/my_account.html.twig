@@ -13,8 +13,8 @@ Mon Compte
 
   <div class="big-box">
     <div id="account_infos">
-      <h1 class="display-3">{{ user.firstName ~ ' ' ~ user.lastName}}</h1>
-      <p class="lead">Membre depuis le {{ user.accountCreationDate | date('d/m/Y') }} </p>
+      <h1 >{{ user.firstName ~ ' ' ~ user.lastName}}</h1>
+      <p >Membre depuis le {{ user.accountCreationDate | date('d/m/Y') }} </p>
       {% if user.activity != null %}
       <hr class="my-4"> 
       <p> {{ user.activity }} </p>

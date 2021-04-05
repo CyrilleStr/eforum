@@ -8,10 +8,15 @@ utilisateur introuvé
 {% endif %}
 {% endblock %}
 
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('css/my_account.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/list_post.css') }}">
+{% endblock %}
+
 {% block body %}
 
 {% if user != NULL %}
-  <div class="jumbotron">
+  <div class="big-box">
     <h1 class="display-3">{{ user.firstName ~ ' ' ~ user.lastName}}</h1>
     <p class="lead">Membre depuis le {{ user.accountCreationDate | date('d/m/Y') }} </p>
     {% if user.activity != null %}
@@ -19,9 +24,9 @@ utilisateur introuvé
     <p> {{ user.activity }} </p>
     {% if app.user %}
       {% if app.user.isUserFollowed(user) %}
-        <button type="button" id="/user/follow/{{user.id}}" class="follow btn btn-info">Ne plus suivre</button>
+        <button type="button" id="/user/follow/{{user.id}}" class="btn-primary follow">Ne plus suivre</button>
       {% else %}
-        <button type="button" id="/user/follow/{{user.id}}" class="follow btn btn-info">Suivre</button>
+        <button type="button" id="/user/follow/{{user.id}}" class="btn-primary follow">Suivre</button>
       {% endif %}
     {% endif %}
   {% endif %}
@@ -34,23 +39,24 @@ utilisateur introuvé
     </div>
   {% else %}
     <h1>Derniers posts</h1>
-    {% for post in user.posts %}
-    <div class="list-group">
-      <a href="{{ path('show_post',{id:post.id})}}" class="list-group-item list-group-item-action flex-column align-items-start active">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1"> {{ post.title}} </h5>
-          <small> {{ post.creationDate | date('d/m/Y') }} </small>
+    <div class="post-container">
+      {% for post in user.posts %}
+      <div class="post-box">
+        <div class="top-post-box">
+          <h1 class="title">Sujet : {{post.title}}</h1>
+          <span class="badge-info">
+            {% if post.status == 0 %}  
+              {{ " ouvert"}}
+            {% else %}
+              {{" fermé"}}
+            {% endif %} 
+          </span>
         </div>
-        <p class="mb-1"> {{ post.description|length > 50 ? post.description|slice(0, 50) ~ '...' :post.description  }}</p>
-        <span class="badge badge-info">
-        {% if post.status == 0 %}  
-            {{ " ouvert"}}
-        {% else %}
-            {{" fermé"}}
-        {% endif %}</span>
-      </a>
-    </div>
-    {% endfor %}
+        <hr class="my-4">
+        <p class="time-box">{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</p>
+        <a class="btn-read" href="{{path('show_post', {id:post.id}) }}" role="button">Lire le post</a>
+      </div>
+      {% endfor %}
   {% endif %}
 
 {% else %}
@@ -69,6 +75,7 @@ utilisateur introuvé
   {% if app.user %}
 
     function onClickFollowBtn(event) {
+        console.log("debug");
         event.preventDefault();
         const url = this.id;
         const btn = this;

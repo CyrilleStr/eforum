@@ -20,8 +20,13 @@
                         <input autocomplete="off" type="text" placeholder="Rechercher" class="search-input" name="key">
                         <button type="submit" class="search-btn"><img src="{{ asset('img/search_icon.png')}}" alt="search_icon.png"></button>
                     </form>
-                    <a href="#" class="notif-icon"><img src="{{ asset('img/notif_icon.png')}}" alt="notif_icon.png"></a>
-                    <div class="dropdown-account">
+                    {% if app.user %}
+                    <div class="dropdown dropdown-notif">
+                        <button onclick="notifDropdownToggle();" class="notif-icon" id="notif-btn"><img src="{{ asset('img/notif_icon.png')}}" alt="notif_icon.png"></button>
+                            <ul class="notif-group"></ul>                        
+                    </div>
+                    {% endif %}
+                    <div class="dropdown dropdown-account">
                         <button onclick="accountDropdownToggle();" class="account-icon" id="accout-btn"><img src="{{ asset('img/account_icon.png')}}" alt="account_icon.png"></button>
                         {% if app.user %}
                             <ul>
@@ -46,7 +51,7 @@
                 <a class="nav-link" href="{{path('list_posts', {categoryName:"Entreprise"})}}">Entreprise</a>
                 <a class="nav-link" id="new_post" href="{{ path('create_post') }}">Nouveau post</a>
             </nav>
-        </header>
+        </header>   
         <div class="page-content">
             {% block body %}{% endblock %}
         </div>
@@ -60,14 +65,54 @@
             </div>
         </footer>
         <script>
-            const dropdown = document.querySelector('.dropdown-account');
+            const dropdownAccount = document.querySelector('.dropdown-account');
 
             function accountDropdownToggle(){
-                console.log("function");
-                dropdown.classList.toggle('active');
+                dropdownAccount.classList.toggle('active');
             }
 
+            {% if app.user %}
+
+            const dropdownNotif = document.querySelector('.dropdown-notif');
+            function notifDropdownToggle(){
+                dropdownNotif.classList.toggle('active');
+            }
+
+            {% endif %}
         </script>
+        {% if app.user %}
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        {% if app.user %}
+        <script>
+        axios.get("/notif/get").then(function(response){
+                    console.log("response request:");
+                    console.log(response.data);
+                    const notifGroup = document.querySelector(".notif-group");
+                    if (response.data[0].length > 0) {
+                        for (let i = 0; i < response.data[0].length; i++) {
+                            var newEl = document.createElement("a");
+                            newEl.innerHTML = response.data[0][i];
+                            newEl.href = response.data[1][i];
+                            newEl.id = response.data[2][i];
+                            newEl.addEventListener('click',onClickLinkNotif);
+                            notifGroup.prepend(newEl);
+                        }
+                    } else {
+                            var newEl = document.createElement("p");
+                            newEl.innerHTML = "Aucunes nouvelles notifications";
+                            notifGroup.prepend(newEl);
+                    }
+                });
+
+        function onClickLinkNotif(event) {
+            event.preventDefault();
+            id = this.id;
+            axios.get(`/notif/delete/${id}`);
+            window.location.href = this.href;
+        }
+        </script>
+        {% endif %}
+        {% endif %}
         {% block javascripts %}{% endblock %}
     </body>
 </html>

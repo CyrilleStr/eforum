@@ -108,6 +108,11 @@ class User implements UserInterface
      */
     private $usersFollowed;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Notif::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $notifs;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -116,6 +121,7 @@ class User implements UserInterface
         $this->badge = new ArrayCollection();
         $this->usersFollower = new ArrayCollection();
         $this->usersFollowed = new ArrayCollection();
+        $this->notifs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -441,6 +447,36 @@ class User implements UserInterface
         }
 
         return false;
+    }
+
+    /**
+     * @return Collection|Notif[]
+     */
+    public function getNotifs(): Collection
+    {
+        return $this->notifs;
+    }
+
+    public function addNotif(Notif $notif): self
+    {
+        if (!$this->notifs->contains($notif)) {
+            $this->notifs[] = $notif;
+            $notif->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotif(Notif $notif): self
+    {
+        if ($this->notifs->removeElement($notif)) {
+            // set the owning side to null (unless already changed)
+            if ($notif->getUser() === $this) {
+                $notif->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
 
