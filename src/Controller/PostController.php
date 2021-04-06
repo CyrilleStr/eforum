@@ -16,6 +16,7 @@ use Exception;
 use OutOfRangeException;
 use phpDocumentor\Reflection\Types\Boolean;
 use PhpParser\Node\Stmt\Break_;
+use PhpParser\Node\Stmt\ElseIf_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,11 +79,9 @@ class PostController extends AbstractController
      * @Route("/post/show/{id}", name="show_post")
      */
 
-     public function show($id, Request $request,EntityManagerInterface $manager){
+     public function show($id, PostRepository $postRepo){
 
-        // Get post
-        $repoPost = $this->getDoctrine()->getRepository(Post::class);
-        $post = $repoPost->find($id);
+        $post = $postRepo->find($id);
 
         // Get comments       
         $repoComment = $this->getDoctrine()->getRepository(Comment::class);
@@ -97,6 +96,36 @@ class PostController extends AbstractController
             'comments' => $comments
         ]);
      }
+
+     /**
+      * @Route("/post/delete/{id}", name="delete_post")
+      */
+
+    public function deletePost(Post $post, EntityManagerInterface $manager) {
+        $user = $this->getUser();
+        if(!$user) return $this->redirectToRoute('app_login');
+
+        if($post->getAuthor() != $user) return $this->json([
+            'code' => 403,
+            'message' => "Unauthorized"
+        ],403);
+
+        try {
+            $manager->remove($post);
+            $manager->flush();
+        } catch(Exception $e) {
+            return $this->json([
+                'code' => 403,
+                'message' => print_r($e)
+            ],403);
+        }
+
+        return $this->json([
+            'code' => 200,
+            'message' => "Post succesfully removed"
+        ],200);
+        
+    }
 
      /**
      * @Route("/post/list/{startAt}/{categoryName}/{orderBy}/{onlyPost}", name="list_posts",  defaults={"startAt": 0, "categoryName": "all", "orderBy":"none", "onlyPost":"false"}))

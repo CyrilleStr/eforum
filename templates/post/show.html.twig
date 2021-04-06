@@ -16,13 +16,18 @@
 
 {% if post == NULL %}
 
-    <h1>Erreur: l'article demandé n'existe pas ou a été supprimé</h1>
+    <h1>Erreur: le post demandé n'existe pas ou a été supprimé</h1>
 
 {% else %}
 
     <div class="post">
-        <h1 class="display-3">{{ post.title }}</h1>
-        <p class="lead">Par {{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }} </p>
+        <div class="top-post">
+            <h1 class="display-3">{{ post.title }}</h1>
+            {% if post.author == app.user %}
+                <a class="delete-comment" id="{{post.id}}" href="{{ path('delete_post',{id:post.id}) }}" ><img src="{{ asset('img/garbage.png') }}" alt="garbage.png"></a>
+            {% endif %}
+        </div>
+        <p class="lead">Par <a href="{{ path('show_user',{id:post.author.id}) }}" class="author">{{ post.author.firstName ~ ' ' ~ post.author.lastName }}</a>{{ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }} </p>
         <p class="lead">{{ "Catégorie : " ~ post.category.name }} </p>
         <hr class="my-4">
         <p class="description">{{ post.description | raw }}</p>
@@ -52,7 +57,7 @@
         {% for comment in comments %}
             <div class="comment-div" id="commentDiv{{comment.id}}">
                 <div class="comment-header">
-                    <p class="comment-author">{{comment.author.firstName ~ ' ' ~ comment.author.lastName}}</p>
+                    <p class="comment-author"> <a href="{{ path('show_user',{id:comment.author.id}) }}">{{comment.author.firstName ~ ' ' ~ comment.author.lastName}}</a></p>
                     <div class="comment-header-right">
                         <p class="comment-date">
                         {{comment.creationDate | date('d/m/Y') ~ " à " ~ comment.creationDate | date('H:i')}} 
@@ -153,9 +158,12 @@
                     <div class="comment-header">
                         <p class="comment-author">${userFirstName} ${userLastName}</p>
                         <a class="close" id="${response.id}" href="/comment/delete/${response.id}">&times;</a>
-                        <p class="comment-date">
-                        ${response.creationDate}
-                        </p>
+                        <div class="comment-header-right">
+                            <p class="comment-date">
+                            ${response.creationDate}
+                            </p>
+                            <a class="delete-comment" id="${response.id}" href="/comment/delete/${response.id}"><img src="/img/garbage.png" alt="garbage.png"></a>
+                        </div>
                     </div>
                     <div>
                         <p class="comment-content">${content}</p>
@@ -169,6 +177,7 @@
 
                 newDiv.querySelector('a.js-uprate').addEventListener('click',onClickUprateBtn);
                 newDiv.querySelector('a.js-downrate').addEventListener('click',onClickDownrateBtn);
+                newDiv.querySelector('a.delete-comment').addEventListener('click',onClickDeleteBtn);
                 document.getElementById("comments_area").prepend(newDiv);
                 textarea.value = "";
                 button.disabled = false;

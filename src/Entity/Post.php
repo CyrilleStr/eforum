@@ -197,4 +197,19 @@ class Post
         return $this;
     }
 
+    /**
+     * Get all users that comment this post
+     * @return Array|User[]
+     */
+    public function getAuthorComments() {   
+        $comments = $this->comments;
+        $authors = [];
+        foreach($comments as $comment) {
+            if(!in_array($comment->getAuthor(),$authors)) {
+                $authors [] = $comment->getAuthor();
+            }
+        }
+        return $authors;
+    }
+
 }

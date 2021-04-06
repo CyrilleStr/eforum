@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\CommentRate;
 use App\Entity\Post;
+use App\Entity\Notif;
 use App\Repository\CommentRateRepository;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,7 +30,7 @@ class CommentController extends AbstractController
      * @Route("/comment/create/{id}", name="create_comment")
      */
     
-    public function create(Post $post, EntityManagerInterface $manager){
+    public function create(Post $post, EntityManagerInterface $manager, CommentRepository $commentRepo){
 
         $user = $this->getUser();
 
@@ -48,10 +49,39 @@ class CommentController extends AbstractController
             $manager->persist($comment);
             $manager->flush();
             $creationDate = $now->format('d/m/Y à H:i');
+
+            // Send Notif 
+           
+            $postId = $post->getId();
+            $commentId = $commentRepo->find($comment)->getId();
+            $userFirstName = $user->getFirstName();
+            $userLastName = $user->getLastName();
+
+            $notif = new Notif();
+            $notif->setMsg( $userFirstName . ' ' . $userLastName . " a commenté votre post.");
+            $notif->setLink("/post/show/" . $postId . "/#commentDiv" . $commentId);
+            $manager->persist($notif);
+            $post->getAuthor()->addNotif($notif);
+            $manager->persist($post);
+
+            $commentAuthors = $post->getAuthorComments();
+            
+            foreach ($commentAuthors as $author) {
+                if($author != $user) {
+                    $notif = new Notif();
+                    $notif->setMsg( $userFirstName . ' ' . $userLastName . " a commenté un post que vous également commenté.");
+                    $notif->setLink("/post/show/" . $postId . "/#commentDiv" . $commentId);
+                    $manager->persist($notif);
+                    $author->addNotif($notif);
+                    $manager->persist($author);
+                }
+            }
+            $manager->flush();
+
             return $this->json([
                 'code' => 200,
                 'message' => "Comment succesfully added",
-                'id' => $comment->getId(),
+                'id' => $commentId,
                 'creationDate' => $creationDate
             ],200);            
         }else{

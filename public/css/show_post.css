@@ -3,6 +3,15 @@
     border: 0.2rem solid #8e24aa;
 }
 
+.top-post {
+    display: flex;
+    justify-content: space-between;
+}
+
+.author {
+    font-weight: bold;
+}
+
 .badge-info{
     margin-top: 1rem;
 }

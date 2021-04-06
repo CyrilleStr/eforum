@@ -4,6 +4,10 @@ A améliorer :
     - centraliser affichage list_post
     
 A faire :
-- centre de notifs https://www.youtube.com/watch?v=pV4jXfDECjU
+- list_post : afficher clairement type post (avec code couleur)
+- état a affichier avec un rond rouge/vert
+- ajouter un répondre à
 - gestion des erreurs
 - optimiser code CommentController::uprate et downrate (trop de répétition de code)
+- tager les gens
+- centre de notifs https://www.youtube.com/watch?v=pV4jXfDECjU
