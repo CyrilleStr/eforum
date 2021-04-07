@@ -181,6 +181,8 @@ header nav{
 }
 
 .dropdown-item {
+    position: relative;
+    opacity: 100%;
     display: flex;
     flex-direction: column;
     background-color: #fff8e1;

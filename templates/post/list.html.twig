@@ -58,9 +58,9 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
 
-  console.log("debug");
+  const pageCapacity = 10;
   const printedPosts = document.getElementById("printed_posts");
-  var printedPostsCount = 3;
+  var printedPostsCount = pageCapacity;
   const maxPrintedPostCount = {{size}};
   
   function onClickShowMoreBtn(){
@@ -77,7 +77,7 @@
       if(showMore != null){
         showMore.addEventListener('click',onClickShowMoreBtn);
       }
-      printedPostsCount +=3;
+      printedPostsCount +=10;
       if(printedPostsCount > maxPrintedPostCount){
         printedPostsCount = maxPrintedPostCount;
       }

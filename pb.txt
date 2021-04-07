@@ -2,12 +2,13 @@ A améliorer :
     - intégrer les recherches à PostController::list (pour l'affichage par page contenant $PageCapacity posts)
     - ajouter photo aux utilisateurs
     - centraliser affichage list_post
+    - printedPost : système trop tordu (trouver un moyen pour que showMore.html.twig renvoie les nombre de posts ajouté)
     
 A faire :
 - ajouter nombre de vues par topic
 - list_post : afficher clairement type post (avec code couleur)
 - état a affichier avec un rond rouge/vert
-- ajouter un répondre à
+- ajouter un "répondre à"
 - gestion des erreurs
 - optimiser code CommentController::uprate et downrate (trop de répétition de code)
 - tager les gens
