@@ -113,6 +113,11 @@ class User implements UserInterface
      */
     private $notifs;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $admin;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -475,6 +480,18 @@ class User implements UserInterface
                 $notif->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAdmin(): ?bool
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(bool $admin): self
+    {
+        $this->admin = $admin;
 
         return $this;
     }

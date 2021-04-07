@@ -21,12 +21,12 @@
                         <button type="submit" class="search-btn"><img src="{{ asset('img/search_icon.png')}}" alt="search_icon.png"></button>
                     </form>
                     {% if app.user %}
-                    <div class="dropdown dropdown-notif">
+                    <div class="js-dropdown dropdown-notif">
                         <button onclick="notifDropdownToggle();" class="notif-icon" id="notif-btn"><img src="{{ asset('img/notif_icon.png')}}" alt="notif_icon.png"></button>
                             <ul class="notif-group"></ul>                        
                     </div>
                     {% endif %}
-                    <div class="dropdown dropdown-account">
+                    <div class="js-dropdown dropdown-account">
                         <button onclick="accountDropdownToggle();" class="account-icon" id="accout-btn"><img src="{{ asset('img/account_icon.png')}}" alt="account_icon.png"></button>
                         {% if app.user %}
                             <ul>
@@ -45,10 +45,16 @@
                 </div>
             </div>
             <nav>
-                <a class="nav-link" href="{{ path('list_posts',  {filter:"dateDesc"}) }}">Les plus récents</a>
-                <a class="nav-link" href="{{path('list_posts', {categoryName:"Placements"})}}">Placements</a>
-                <a class="nav-link" href="{{path('list_posts', {categoryName:"e-Buisness"})}}">e-Buisness</a>
-                <a class="nav-link" href="{{path('list_posts', {categoryName:"Entreprise"})}}">Entreprise</a>
+                <a class="nav-link" href="{{ path('list_posts') }}">Les plus récents</a>
+                <div class="dropdown-btn">
+                    <a href="{{ path('list_posts', {catName:"Investissements"})}}">Investissements</a>
+                    <div class="dropdown-item">
+                        <a class="nav-link" href="{{path('list_posts', {subCatName:"Bourse",catName:"Investissements"}) }}">Bourse</a>
+                        <a class="nav-link" href="{{path('list_posts', {subCatName:"Crypto-monnaies",catName:"Investissements"})}}">Crypto-monnaies</a>
+                        <a class="nav-link" href="{{path('list_posts', {subCatName:"Immobilier",catName:"Investissements"})}}">Immobilier</a>
+                        <a class="nav-link" href="{{path('list_posts', {subCatName:"Autres",catName:"Investissements"})}}">Autres</a>
+                    </div>
+                </div>
                 <a class="nav-link" id="new_post" href="{{ path('create_post') }}">Nouveau post</a>
             </nav>
         </header>   

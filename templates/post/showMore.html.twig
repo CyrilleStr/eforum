@@ -17,6 +17,6 @@
   {% endfor %}
 {% if more == true %}
 <div class="div-show-more">
-  <a href="{{path('list_posts', {startAt:printedPost,onlyPost:"true",orderBy:orderBy,categoryName:categoryName})}}" id="show_more" class="btn-show-more">Afficher plus</a>
+  <a href="{{path('list_posts', {startAt:printedPost,onlyPost:"true",orderBy:orderBy,catName:catName,subCatName,subCatName})}}" id="show_more" class="btn-show-more">Afficher plus</a>
 </div>
 {% endif %}

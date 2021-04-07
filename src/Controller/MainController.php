@@ -72,36 +72,56 @@ class MainController extends AbstractController
      */
     public function fixtures1(EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder){
         $faker = \Faker\Factory::create('fr_FR');
-        $users = [];
         for ($i=0; $i <10 ; $i++) {
             $user = new User();
             $user->setEmail($faker->email);
             $user->setFirstName($faker->firstName);
             $user->setLastName($faker->lastName);
+            $user->setAdmin(false);
             $user->setActivity($faker->paragraph(5));
             $user->setPassword($encoder->encodePassword($user,"123"));
             $user->setAccountCreationDate(new \DateTime);
             $manager->persist($user);
-            $users[] = $user;
-        }
-        
-        $nameCat = ["Placements","e-Buisness","Entreprise"];
-        $categories = [];
-        for ($i=0; $i < 3; $i++) { 
-            $category = new Category();
-            $category->setName($nameCat[$i]);
-            $manager->persist($category);
-            $categories[] = $category;
         }
 
         $nameType = ["Question","Débat","Divers"];
-        $types = [];
         for ($i=0; $i < 3; $i++) { 
             $type = new Type();
             $type->setName($nameType[$i]);
             $manager->persist($type);
-            $types[] = $type;
         }
+        
+        $nameSubCat1 = ["Bourse","Crypto-monnaies","Immobilier","Autres"];
+        for ($i=0; $i < 4; $i++) { 
+            $category = new Category();
+            $category->setCatName("Investissements");
+            $category->setSubCatName($nameSubCat1[$i]);
+            $manager->persist($category);
+        }
+
+        $nameSubCat2 = ["Création d'entreprise","Comptabilité","Autres"];
+        for ($i=0; $i < 3; $i++) { 
+            $category = new Category();
+            $category->setCatName("Entreprenariat");
+            $category->setSubCatName($nameSubCat2[$i]);
+            $manager->persist($category);
+        }
+
+        $nameSubCat3 = ["Marketing","Feedback","Autres"];
+        for ($i=0; $i < 3; $i++) { 
+            $category = new Category();
+            $category->setCatName("Communication externe");
+            $category->setSubCatName($nameSubCat3[$i]);
+            $manager->persist($category);
+        }
+
+        $nameSubCat4 = ["Gestion managériale","Relations humaines","Gestion du stress","Autres"];
+        for ($i=0; $i < 4; $i++) { 
+            $category = new Category();
+            $category->setCatName("Management");
+            $category->setSubCatName($nameSubCat4[$i]);
+            $manager->persist($category);
+        }   
 
         $manager->flush();
         echo 'finish: now call fixtures2';
@@ -118,7 +138,7 @@ class MainController extends AbstractController
         $types = $typeRepo->findAll();
         $categories = $categoryRepo->findAll();
 
-        for ($i=0; $i < 10; $i++) { 
+        for ($i=0; $i < 50; $i++) { 
             $post = new Post();
             $post->setAuthor($faker->randomElement($users));
             $post->setTitle($faker->sentence(4));

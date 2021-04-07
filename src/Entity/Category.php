@@ -22,7 +22,12 @@ class Category
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $catName;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $subCatName;
 
     /**
      * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="category")
@@ -51,14 +56,26 @@ class Category
         return $this;
     }
 
-    public function getName(): ?string
+    public function getCatName(): ?string
     {
-        return $this->name;
+        return $this->catName;
     }
 
-    public function setName(string $name): self
+    public function setCatName(string $catName): self
     {
-        $this->name = $name;
+        $this->catName = $catName;
+
+        return $this;
+    }
+
+    public function getSubCatName(): ?string
+    {
+        return $this->subCatName;
+    }
+
+    public function setSubCatName(string $subCatName): self
+    {
+        $this->subCatName = $subCatName;
 
         return $this;
     }

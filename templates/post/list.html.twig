@@ -3,7 +3,8 @@
 {% block stylesheets %} <link rel="stylesheet" href="{{ asset('css/list_post.css') }}"> {% endblock %}
 
 {% block title %}
-{% if category == "all" %}Tous les posts{% else %}{{category}}{% endif %}
+{% if catName == "all" %}Les plus récents{% else %}{{catName}}{% endif %}
+{% if subCatName == "all" %} - Tous{% else %} - {{subCatName}}{% endif %}
 {% endblock %}
 
 {% block body %}
@@ -46,7 +47,7 @@
   {% endfor %}
   {% if more == true %}
   <div class="div-show-more">
-    <a href="{{path('list_posts', {startAt:posts|length,onlyPost:"true",orderBy:orderBy,categoryName:categoryName})}}" id="show_more" class="btn-show-more">Afficher plus</a>
+    <a href="{{path('list_posts', {startAt:posts|length,onlyPost:"true",orderBy:orderBy,catName:catName,subCatName:subCatName})}}" id="show_more" class="btn-show-more">Afficher plus</a>
   </div>
   {% endif %}
 </div>
@@ -87,7 +88,7 @@
   function onSubmitOrderBySelect(event){
     event.preventDefault();
     console.log("onSubmitOrderByForm function");
-    const url = `/post/list/0/{{category}}/${this.value}/true`;
+    const url = `/post/list/0/{{catName}}/{{subCatName}}/${this.value}/true`;
     console.log(url);
     const postDiv = document.getElementById("posts_div");
     postDiv.style.opacity = "30%";

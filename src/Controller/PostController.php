@@ -128,10 +128,10 @@ class PostController extends AbstractController
     }
 
      /**
-     * @Route("/post/list/{startAt}/{categoryName}/{orderBy}/{onlyPost}", name="list_posts",  defaults={"startAt": 0, "categoryName": "all", "orderBy":"none", "onlyPost":"false"}))
+     * @Route("/post/list/{startAt}/{catName}/{subCatName}/{orderBy}/{onlyPost}", name="list_posts",  defaults={"startAt": 0, "subCatName": "all", "catName": "all", "orderBy":"none", "onlyPost":"false"}))
      */
 
-    public function list($startAt, $categoryName, $orderBy, $onlyPost, PostRepository $repoPost, CategoryRepository $repoCat){
+    public function list($startAt, $catName, $subCatName, $orderBy, $onlyPost, PostRepository $repoPost, CategoryRepository $repoCat){
         $posts = array();
         $more = false;
         $pageCapacity = 3;
@@ -159,20 +159,28 @@ class PostController extends AbstractController
                 $orderBySQL = ['status'=>"DESC"];
                 break;
             default:
+                // Implement error
                 $orderBySQL = ['creationDate'=>"DESC"];
         }
     
-        switch($categoryName){
-            case "all":
-                $categorySQL = [];
-                break;
-            default:
-                $category = $repoCat->findBy(['name' => $categoryName]);
-                if($category == null){
-                    echo "error category name not found";
-                    die;
-                }
-                $categorySQL = ['category' => $category];
+        if($catName == "all"){
+            $categorySQL = [];
+        } else if($subCatName == "all"){
+            $category = $repoCat->findBy(['catName' => $catName]);
+            if($category == null){
+                // Implement error
+                echo "error category name not found";
+                die;
+            }
+            $categorySQL = ['category' => $category];
+        } else {
+            $category = $repoCat->findBy(['subCatName' => $subCatName , 'catName' => $catName]);
+            if($category == null){
+                // Implement error
+                echo "error category name not found";
+                die;
+            }
+            $categorySQL = ['category' => $category];
         }
 
         $posts = $repoPost->findBy($categorySQL,$orderBySQL);
@@ -191,7 +199,8 @@ class PostController extends AbstractController
                 'more' => $more,
                 'printedPost' => $startAt + $pageCapacity,
                 'orderBy' => $orderBy,
-                'categoryName' => $categoryName
+                'catName' => $catName,
+                'subCatName' => $subCatName
             ]);
 
         }else{
@@ -203,10 +212,10 @@ class PostController extends AbstractController
             return $this->render('post/list.html.twig',[
                 'posts' => $posts,
                 'size'=>  $size,
-                'category' => $categoryName,
                 'more' => $more,
                 'orderBy' => $orderBy,
-                'categoryName' => $categoryName
+                'catName' => $catName,
+                'subCatName' => $subCatName
             ]);
         }
 

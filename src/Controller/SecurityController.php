@@ -25,6 +25,7 @@ class SecurityController extends AbstractController
             $hash = $encoder->encodePassword($user,$user->getPassword());
             $user->setPassword($hash);
             $user->setAccountCreationDate(new \Datetime);
+            $user->setAdmin(false);
             $this->em = $this->getDoctrine()->getManager();
             $this->em->persist($user);
             $this->em->flush();
