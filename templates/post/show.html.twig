@@ -28,7 +28,7 @@
             {% endif %}
         </div>
         <p class="lead">Par <a href="{{ path('show_user',{id:post.author.id}) }}" class="author">{{ post.author.firstName ~ ' ' ~ post.author.lastName }}</a>{{ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }} </p>
-        <p class="lead">{{ "Catégorie : " ~ post.category.name }} </p>
+        <p class="lead">{{ "Catégorie : " ~ post.category.catName ~ " - " ~ post.category.subCatName }} </p>
         <hr class="my-4">
         <p class="description">{{ post.description | raw }}</p>
         <p class="badge-info">
