@@ -4,7 +4,7 @@ A améliorer :
     - centraliser affichage list_post
     
 A faire :
-- refaire nav
+- ajouter nombre de vues par topic
 - list_post : afficher clairement type post (avec code couleur)
 - état a affichier avec un rond rouge/vert
 - ajouter un répondre à

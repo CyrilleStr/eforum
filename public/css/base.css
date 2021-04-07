@@ -161,7 +161,33 @@ header nav{
 }
 
 .dropdown-btn {
-    
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+}
+
+.dropdown-div {
+    transition: 0.3s;
+    height: 2rem;
+    width: max-content;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff8e1;
+}
+
+.dropdown-div:hover {
+    transition: 0.3s;
+    overflow: visible;
+}
+
+.dropdown-item {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff8e1;
+}
+
+.dropdown-link{
+    margin: 0.5rem;
 }
 
 #new_post{

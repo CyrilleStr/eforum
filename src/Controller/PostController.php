@@ -134,7 +134,7 @@ class PostController extends AbstractController
     public function list($startAt, $catName, $subCatName, $orderBy, $onlyPost, PostRepository $repoPost, CategoryRepository $repoCat){
         $posts = array();
         $more = false;
-        $pageCapacity = 3;
+        $pageCapacity = 10;
 
         switch($orderBy){
             case "none":
