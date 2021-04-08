@@ -23,7 +23,7 @@ class PostType extends AbstractType
             ->add('category',EntityType::class,[
                 'label' => "Categorie",
                 'class' => Category::class,
-                'choice_label' => 'name'
+                'choice_label' => 'subCatName'
             ])
             ->add('type',EntityType::class,[
                 'label' => "Type",
