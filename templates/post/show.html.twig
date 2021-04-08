@@ -79,6 +79,7 @@
                         <span id="ratecount{{comment.id}}"> {{comment.sumCommentRates}}</span>
                         <a {% if app.user %} href="{{path('comment_downrate',{'id':comment.id})}}" {% else %}title="Connectez-vous pour réagir" href="{{ path('app_login') }}"{% endif %} class="js-downrate btn-down" id="{{comment.id}}"> <img src="{{ asset("img/down.png") }}" alt="up.png"></a>
                     </div>
+                    <a href="" class="btn-primary">Répondre</a>
                 </div>
             </div>
         {% endfor %}

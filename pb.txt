@@ -1,6 +1,5 @@
 
 A faire :
-- ajouter nombre de vues par topic
 - ajouter un "répondre à"
 - tager les gens
 
