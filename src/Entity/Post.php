@@ -65,6 +65,11 @@ class Post
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $view;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -210,6 +215,18 @@ class Post
             }
         }
         return $authors;
+    }
+
+    public function getView(): ?int
+    {
+        return $this->view;
+    }
+
+    public function setView(int $view): self
+    {
+        $this->view = $view;
+
+        return $this;
     }
 
 }

@@ -147,6 +147,7 @@ class MainController extends AbstractController
             $post->setDescription($faker->paragraphs(3,true));
             $post->setCategory($faker->randomElement($categories));
             $post->setType($faker->randomElement($types));
+            $post->setView($faker->randomDigit());
             $manager->persist($post);
 
             for ($j=0; $j < mt_rand(0,10); $j++) { 

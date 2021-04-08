@@ -43,6 +43,7 @@ class PostController extends AbstractController
             $post->setCreationDate(new \DateTime);
             $post->setStatus(0);
             $post->setAuthor($this->getUser());
+            $post->setView(0);
             $manager->persist($post);
             $manager->flush();
 
@@ -79,9 +80,11 @@ class PostController extends AbstractController
      * @Route("/post/show/{id}", name="show_post")
      */
 
-     public function show($id, PostRepository $postRepo){
+     public function show($id, PostRepository $postRepo,EntityManagerInterface $manager){
 
         $post = $postRepo->find($id);
+        $manager->persist($post->setView($post->getView() + 1));
+        $manager->flush();
 
         // Get comments       
         $repoComment = $this->getDoctrine()->getRepository(Comment::class);
