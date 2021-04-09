@@ -89,142 +89,17 @@
 {% endif %}
 {% endblock %}
 
-{% block javascripts %}
-    <script>
-        console.log("debug :");
-        {% if app.user %}
-        function onClickUprateBtn(event) {
-            console.log("uprate function");
-            event.preventDefault();
-            const url = this.href;
-            this.disable = true;
-            if(url != null){
-                console.log("url !=NULL");
-                const rateCount = document.getElementById(`ratecount${this.id}`);
-                axios.get(url).then(function(response){
-                    console.log("response request:");
-                    console.log(response.data.rates);
-                    rateCount.textContent = response.data.rates;
-                });
-            }
-            this.disable = false;
 
-        }
-
-        function onClickDownrateBtn(event) {
-            console.log("downrate function");
-            event.preventDefault();
-            const url = this.href;
-            if(url != null){
-                console.log("url !=NULL");
-                const rateCount = document.getElementById(`ratecount${this.id}`);
-                axios.get(url).then(function(response){
-                    console.log("response request:");
-                    rateCount.textContent = response.data.rates;
-                });
-            }
-        }
-
-        function onclickSubmitButton(){
-            console.log("onclicksubmitbutton function");
-            event.preventDefault();
-            const form =  document.querySelector('#add_comment_form');
-            const textarea = form.querySelector('textarea');
-            const button = this;
-
-            // Interrupting input
-
-            button.disabled = true;
-            textarea.disabled = true;
-            button.innerHTML = "Publication...";
-
-            // Extracting and packaging data
-            const data = new FormData();
-            const content = textarea.value;
-            console.log(content);
-            data.append('content',content);
-
-            // Sending data
-            const url = form.action;
-            const requestAjax = new XMLHttpRequest();
-            requestAjax.open('POST',url);
-            requestAjax.send(data);
-            requestAjax.onload = function () {
-                console.log("onload function");
-                const response = JSON.parse(requestAjax.responseText);
-                var newDiv = document.createElement("div");
-                newDiv.setAttribute('class',"card border-dark mb-3");
-                newDiv.setAttribute('style',"max-width: 100%;");
-                newDiv.innerHTML = `
-                <div class="comment-div" id="commentDiv${response.id}">
-                    <div class="comment-header">
-                        <p class="comment-author">${userFirstName} ${userLastName}</p>
-                        <a class="close" id="${response.id}" href="/comment/delete/${response.id}">&times;</a>
-                        <div class="comment-header-right">
-                            <p class="comment-date">
-                            ${response.creationDate}
-                            </p>
-                            <a class="delete-comment" id="${response.id}" href="/comment/delete/${response.id}"><img src="/img/garbage.png" alt="garbage.png"></a>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="comment-content">${content}</p>
-                        <div class="comment-rate-group">
-                            <a href="/comment/uprate/${response.id}" class="js-uprate btn-up" id="${response.id}"><img src="/img/up.png" alt="up.png"></a>
-                            <span id="ratecount${response.id}">0</span>
-                            <a href="/comment/downrate/${response.id}" class="js-downrate btn-down" id="${response.id}"> <img src="/img/down.png" alt="up.png"></a>
-                        </div>
-                    </div>
-                </div>`
-
-                newDiv.querySelector('a.js-uprate').addEventListener('click',onClickUprateBtn);
-                newDiv.querySelector('a.js-downrate').addEventListener('click',onClickDownrateBtn);
-                newDiv.querySelector('a.delete-comment').addEventListener('click',onClickDeleteBtn);
-                document.getElementById("comments_area").prepend(newDiv);
-                textarea.value = "";
-                button.disabled = false;
-                textarea.disabled = false;
-                button.innerHTML = "Ajouter";
-            }
-        }
-
-        function onClickDeleteBtn(){
-            console.log("onClickCloseBtn function");
-            event.preventDefault();
-            const url = this.href;
-            const id = this.id;
-            if(url != null){
-                axios.get(url).then(function(response){
-                    console.log("response request message:");
-                    console.log(response.data);
-                    if(response.data.code == 200){
-                        document.getElementById(`commentDiv${id}`).remove()
-                    }else{
-                        this.innerHTML = "Error";
-                    }
-                });
-            }
-        }
-
-        const userFirstName = "{{app.user.firstName}}";
-        const userLastName = "{{app.user.lastName}}";
-
-
-        document.querySelectorAll('a.js-uprate').forEach( 
-            link => link.addEventListener('click',onClickUprateBtn)
-        );
-
-        document.querySelectorAll('a.js-downrate').forEach( 
-            link => link.addEventListener('click',onClickDownrateBtn)
-        );
-        
-        document.querySelector("#submit_button").addEventListener('click',onclickSubmitButton);
-
-        document.querySelectorAll('.delete-comment').forEach( 
-            link => link.addEventListener('click',onClickDeleteBtn)
-        );
-
-        {% endif %}
-       
-    </script>
+{% block data %}
+    {% if app.user %}
+        <input id="userFirstName" value="{{ app.user.firstName }}">
+        <input id="userLastName" value="{{ app.user.lastName }}">
+    {% endif %}
 {% endblock %}
+
+{% block javascripts %}
+    {% if app.user %}
+        <script src="{{ asset('js/show_post.js') }}"></script>
+    {% endif %}
+{% endblock %}
+    
