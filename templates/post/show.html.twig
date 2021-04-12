@@ -42,10 +42,10 @@
     </div>
 
     <fieldset class="comment-group">
-        <legend>Discussions</legend>
+        <legend id="textarea">Discussions</legend>
         {% if app.user %}
-            <form class="form-group" action="{{path('create_comment',{'id':post.id})}}" method="POST" id="add_comment_form">
-                <textarea name="content" cols="100" rows="3" placeholder="Ajoutez votre commentaire..." class="form-control"></textarea>
+            <form class="form-group" action="{{path('create_comment',{'post':post.id})}}" method="POST" id="add_comment_form">
+                <textarea name="content" cols="100" rows="3" placeholder="Ajoutez votre commentaire..." class="form-control" require></textarea>
                 <button type="submit" class="btn-primary" id="submit_button">Ajouter</button>
             </form>
         {% else %}
@@ -74,12 +74,30 @@
                 </div>
                 <div>
                     <p class="comment-content">{{comment.content | raw}}</p>
+                    {% if comment.reference %}
+                        <div class="reference-div">
+                            <div class="comment-header">
+                                <p class="comment-author"> <a href="{{ path('show_user',{id:comment.reference.author.id}) }}">{{comment.reference.author.firstName ~ ' ' ~ comment.reference.author.lastName}}</a></p>
+                                <p class="comment-date">
+                                {{comment.reference.creationDate | date('d/m/Y') ~ " à " ~ comment.reference.creationDate | date('H:i')}} 
+                                {% if comment.reference.updateDate != NULL %}
+                                    {{ ' (modifié le ' ~ comment.reference.updateDate | date('d/m/Y') ~ " à " ~ comment.reference.updateDate | date('H:i') ~ ')'}}
+                                {% endif %}
+                                </p>
+                            </div>
+                            <p class="comment-content">{{comment.reference.content | raw}}</p>
+                            
+                        </div>
+                    {% endif %}
                     <div class="comment-rate-group">
                         <a {% if app.user %} href="{{ path('comment_uprate',{'id':comment.id}) }}" {% else %}title="Connectez-vous pour réagir" href="{{ path('app_login') }}"{% endif %} class="js-uprate btn-up" id="{{comment.id}}"><img src="{{ asset("img/up.png") }}" alt="up.png"></a>
                         <span id="ratecount{{comment.id}}"> {{comment.sumCommentRates}}</span>
                         <a {% if app.user %} href="{{path('comment_downrate',{'id':comment.id})}}" {% else %}title="Connectez-vous pour réagir" href="{{ path('app_login') }}"{% endif %} class="js-downrate btn-down" id="{{comment.id}}"> <img src="{{ asset("img/down.png") }}" alt="up.png"></a>
                     </div>
-                    <a href="" class="btn-primary">Répondre</a>
+                    <br>
+                    {% if app.user != comment.author %}
+                        <a href="{{ path('create_comment',  {'post':post.id, 'reference':comment.id} ) }}" class="btn-primary answer-to" id="{{comment.author.firstName ~ ' ' ~ comment.author.lastName }}">Répondre</a>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
@@ -95,6 +113,7 @@
         <input id="userFirstName" value="{{ app.user.firstName }}">
         <input id="userLastName" value="{{ app.user.lastName }}">
     {% endif %}
+        <input id="postId" value="{{ post.id }}">
 {% endblock %}
 
 {% block javascripts %}

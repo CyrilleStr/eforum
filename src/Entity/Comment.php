@@ -49,6 +49,11 @@ class Comment
      */
     private $commentRates;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=comment::class)
+     */
+    private $reference;
+
     public function __construct()
     {
         $this->commentRates = new ArrayCollection();
@@ -190,5 +195,17 @@ class Comment
             $sum += $CommentRate->getNote();
         }
         return $sum;    
+    }
+
+    public function getReference(): ?comment
+    {
+        return $this->reference;
+    }
+
+    public function setReference(?comment $reference): self
+    {
+        $this->reference = $reference;
+
+        return $this;
     }
 }

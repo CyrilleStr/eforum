@@ -57,16 +57,36 @@ function onclickSubmitButton(event){
     requestAjax.open('POST',url);
     requestAjax.send(data);
     requestAjax.onload = function () {
-        console.log("onload function");
+        console.log("response");
+        console.log(requestAjax.responseText);
         const response = JSON.parse(requestAjax.responseText);
+        console.log(response);
         var newDiv = document.createElement("div");
         newDiv.setAttribute('class',"card border-dark mb-3");
         newDiv.setAttribute('style',"max-width: 100%;");
+        var reference;
+        console.log(response.reference.isEmpty);
+        if(!response.reference.isEmpty) {
+            reference = `
+                <div class="reference-div">
+                    <div class="comment-header">
+                        <p class="comment-author"> <a href="/user/show/${response.reference.authorId}">${response.reference.author}</a></p>
+                        <p class="comment-date">
+                        ${response.reference.date} 
+                        </p>
+                    </div>
+                    <p class="comment-content">${response.reference.content}</p>
+                </div>
+            `;
+            console.log('yooooooooooooo');
+        } else {
+            reference = "";
+        }
+        console.log(reference);
         newDiv.innerHTML = `
         <div class="comment-div" id="commentDiv${response.id}">
             <div class="comment-header">
-                <p class="comment-author">${userFirstName} ${userLastName}</p>
-                <a class="close" id="${response.id}" href="/comment/delete/${response.id}">&times;</a>
+                <p class="comment-author"><a href="/user/my_account">${userFirstName} ${userLastName}</a></p>
                 <div class="comment-header-right">
                     <p class="comment-date">
                     ${response.creationDate}
@@ -74,6 +94,7 @@ function onclickSubmitButton(event){
                     <a class="delete-comment" id="${response.id}" href="/comment/delete/${response.id}"><img src="/img/garbage.png" alt="garbage.png"></a>
                 </div>
             </div>
+                ${reference}
             <div>
                 <p class="comment-content">${content}</p>
                 <div class="comment-rate-group">
@@ -95,6 +116,24 @@ function onclickSubmitButton(event){
     }
 }
 
+function onClickAnswerToBtn(event) {
+    console.log("onClickAnswerToBtn function");
+    event.preventDefault();
+    location.href = "#textarea";
+    console.log(this.href);
+    const form = document.getElementById("add_comment_form");
+    form.action = this.href;
+    var newDiv = document.createElement("span");
+    newDiv.className = 'badge-warning';
+    newDiv.id = 'answer_to';
+    newDiv.innerHTML = `
+        Répondre à ${this.id} <a href="" class="cancel-answer-to"><img src="/img/close.png" alt="close.png"></a>        
+        `;
+    form.insertAdjacentElement("afterbegin",newDiv);
+    form.querySelector('.cancel-answer-to').addEventListener('click',onClickCancelAnswerTo);
+
+}
+
 function onClickDeleteBtn(event){
     console.log("onClickCloseBtn function");
     event.preventDefault();
@@ -113,6 +152,13 @@ function onClickDeleteBtn(event){
     }
 }
 
+function onClickCancelAnswerTo(event) {
+    event.preventDefault();
+    document.getElementById("answer_to").remove();
+    const id = document.getElementById("postId").value;
+    document.getElementById("add_comment_form").action = `/comment/create/${id}`;
+}
+
 const userFirstName = document.getElementById("userFirstName").value;
 const userLastName = document.getElementById("userLastName").value;
 
@@ -125,7 +171,12 @@ document.querySelectorAll('a.js-downrate').forEach(
     link => link.addEventListener('click',onClickDownrateBtn)
 );
 
+document.querySelectorAll('a.answer-to').forEach( 
+    link => link.addEventListener('click',onClickAnswerToBtn)
+);
+
 document.querySelector("#submit_button").addEventListener('click',onclickSubmitButton);
+
 
 document.querySelectorAll('.delete-comment').forEach( 
     link => link.addEventListener('click',onClickDeleteBtn)

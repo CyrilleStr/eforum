@@ -37,6 +37,13 @@ legend{
     padding: 1rem;
 }
 
+.reference-div { 
+    background-color: #ffc107;
+    margin: 1rem;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
 .comment-header{
     display: flex;
     justify-content: space-between;
@@ -89,4 +96,12 @@ legend{
 
 .form-group .btn-primary{
     width: max-content;
+}
+
+.cancel-answer-to img {
+    height: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 1rem;
+    padding: 0.2rem;
+    background-color: #8e24aa;
 }

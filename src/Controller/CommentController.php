@@ -27,17 +27,19 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/comment/create/{id}", name="create_comment")
+     * @Route("/comment/create/{post}/{reference}", name="create_comment",  defaults={"reference": 0})
      */
     
-    public function create(Post $post, EntityManagerInterface $manager, CommentRepository $commentRepo){
+    public function create(Post $post, int $reference, EntityManagerInterface $manager, CommentRepository $commentRepo){
 
         $user = $this->getUser();
+        $error = [];
+        $referenceJson = [];
 
         if (!$user) return $this->json([
             'code' => 403,
             'message' => 'Unauthorized'
-        ],403);
+        ],403);      
 
         if(array_key_exists('content',$_POST)){
             $comment = new Comment();
@@ -46,6 +48,24 @@ class CommentController extends AbstractController
             $comment->setAuthor($user);
             $comment->setContent($_POST['content']);
             $comment->setPost($post);
+            if($reference == 0) {
+                $comment->setReference(null);
+            } else {
+                $ref = $commentRepo->find($reference);
+                if($ref) {
+                    $comment->setReference($ref);
+                    $author =  $ref->getAuthor();
+                    $referenceJson = [
+                        'author' => $author->getFirstName() . ' ' . $author->getLastName(),
+                        'date' => $ref->getCreationDate()->format('d/m/Y à H:i'),
+                        'content' => $ref->getContent(),
+                        'authorId' => $author->getId()
+                    ];
+                } else {
+                    $comment->setReference(null);
+                    $error[] = "Referenced comment doesn't exist";
+                }
+            }
             $manager->persist($comment);
             $manager->flush();
             $creationDate = $now->format('d/m/Y à H:i');
@@ -82,7 +102,9 @@ class CommentController extends AbstractController
                 'code' => 200,
                 'message' => "Comment succesfully added",
                 'id' => $commentId,
-                'creationDate' => $creationDate
+                'creationDate' => $creationDate,
+                'reference' =>$referenceJson,
+                'error' => $error
             ],200);            
         }else{
             return $this->json([
