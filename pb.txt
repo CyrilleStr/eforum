@@ -1,6 +1,6 @@
 
 A faire :
-- ajouter un "répondre à"
+- trier les commentaires
 - tager les gens
 
 Design :
