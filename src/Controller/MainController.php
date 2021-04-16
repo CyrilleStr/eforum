@@ -8,7 +8,6 @@ use App\Entity\CommentRate;
 use App\Entity\Post;
 use App\Entity\Type;
 use App\Entity\User;
-use App\Form\SearchPostType;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use App\Repository\TypeRepository;
@@ -68,7 +67,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/fixtures1", name="fixtures1") 
+     * @Route("/fixtures1", name="fixtures1", condition="'dev' === '%kernel.environment%'") 
      */
     public function fixtures1(EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder){
         $faker = \Faker\Factory::create('fr_FR');
@@ -107,15 +106,15 @@ class MainController extends AbstractController
             $manager->persist($category);
         }
 
-        $nameSubCat3 = ["Marketing","Feedback","Autres"];
+        $nameSubCat3 = ["Marketing","Marketing Digital","Autres"];
         for ($i=0; $i < 3; $i++) { 
             $category = new Category();
-            $category->setCatName("Communication externe");
+            $category->setCatName("Communication");
             $category->setSubCatName($nameSubCat3[$i]);
             $manager->persist($category);
         }
 
-        $nameSubCat4 = ["Gestion managériale","Relations humaines","Gestion du stress","Autres"];
+        $nameSubCat4 = ["Gestion managériale","Relations humaines","Gestion du stress","Psychologie","Autres"];
         for ($i=0; $i < 4; $i++) { 
             $category = new Category();
             $category->setCatName("Management");
@@ -129,7 +128,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/fixtures2", name="fixtures2") 
+     * @Route("/fixtures2", name="fixtures2", condition="'dev' === '%kernel.environment%'") 
      */
     public function fixtures2(EntityManagerInterface $manager, UserRepository $userRepo, TypeRepository $typeRepo, CategoryRepository $categoryRepo){
         

@@ -45,6 +45,7 @@
         <legend id="textarea">Discussions</legend>
         {% if app.user %}
             <form class="form-group" action="{{path('create_comment',{'post':post.id})}}" method="POST" id="add_comment_form">
+                <span id="answer_to"></span>
                 <textarea name="content" cols="100" rows="3" placeholder="Ajoutez votre commentaire..." class="form-control" require></textarea>
                 <button type="submit" class="btn-primary" id="submit_button">Ajouter</button>
             </form>
@@ -95,7 +96,7 @@
                         <a {% if app.user %} href="{{path('comment_downrate',{'id':comment.id})}}" {% else %}title="Connectez-vous pour réagir" href="{{ path('app_login') }}"{% endif %} class="js-downrate btn-down" id="{{comment.id}}"> <img src="{{ asset("img/down.png") }}" alt="up.png"></a>
                     </div>
                     <br>
-                    {% if app.user != comment.author %}
+                    {% if app.user and app.user != comment.author %}
                         <a href="{{ path('create_comment',  {'post':post.id, 'reference':comment.id} ) }}" class="btn-primary answer-to" id="{{comment.author.firstName ~ ' ' ~ comment.author.lastName }}">Répondre</a>
                     {% endif %}
                 </div>

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -21,8 +22,8 @@ class RegistrationType extends AbstractType
             ->add('lastName',TextType::class,[
                 'label' =>"Nom de famille"
             ])
-            ->add('email',TextType::class,[
-                'label' =>"Prénom"
+            ->add('email',EmailType::class,[
+                'label' =>"Email"
             ])
             ->add('activity',TextareaType::class,[
                 'label' =>"Activité"

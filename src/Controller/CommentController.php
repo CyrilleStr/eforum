@@ -34,7 +34,7 @@ class CommentController extends AbstractController
 
         $user = $this->getUser();
         $error = [];
-        $referenceJson = [];
+        $referenceJson = null;
 
         if (!$user) return $this->json([
             'code' => 403,

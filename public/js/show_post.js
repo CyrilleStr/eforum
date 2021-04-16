@@ -65,8 +65,7 @@ function onclickSubmitButton(event){
         newDiv.setAttribute('class',"card border-dark mb-3");
         newDiv.setAttribute('style',"max-width: 100%;");
         var reference;
-        console.log(response.reference.isEmpty);
-        if(!response.reference.isEmpty) {
+        if(response.reference != null) {
             reference = `
                 <div class="reference-div">
                     <div class="comment-header">
@@ -78,11 +77,9 @@ function onclickSubmitButton(event){
                     <p class="comment-content">${response.reference.content}</p>
                 </div>
             `;
-            console.log('yooooooooooooo');
         } else {
             reference = "";
         }
-        console.log(reference);
         newDiv.innerHTML = `
         <div class="comment-div" id="commentDiv${response.id}">
             <div class="comment-header">
@@ -120,16 +117,13 @@ function onClickAnswerToBtn(event) {
     console.log("onClickAnswerToBtn function");
     event.preventDefault();
     location.href = "#textarea";
-    console.log(this.href);
     const form = document.getElementById("add_comment_form");
     form.action = this.href;
-    var newDiv = document.createElement("span");
-    newDiv.className = 'badge-warning';
-    newDiv.id = 'answer_to';
-    newDiv.innerHTML = `
+    const span = document.getElementById("answer_to");
+    span.innerHTML = `
         Répondre à ${this.id} <a href="" class="cancel-answer-to"><img src="/img/close.png" alt="close.png"></a>        
         `;
-    form.insertAdjacentElement("afterbegin",newDiv);
+    span.classList.add("badge-warning");
     form.querySelector('.cancel-answer-to').addEventListener('click',onClickCancelAnswerTo);
 
 }
@@ -154,7 +148,9 @@ function onClickDeleteBtn(event){
 
 function onClickCancelAnswerTo(event) {
     event.preventDefault();
-    document.getElementById("answer_to").remove();
+    const span = document.getElementById("answer_to");
+    span.innerHTML = "";
+    span.classList.remove("badge-warning");    
     const id = document.getElementById("postId").value;
     document.getElementById("add_comment_form").action = `/comment/create/${id}`;
 }
