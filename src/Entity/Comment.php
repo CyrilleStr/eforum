@@ -32,7 +32,7 @@ class Comment
     /**
      * @ORM\Column(type="datetime")
      */
-    private $creation_date;
+    private $creationDate;
 
     /**
      * @ORM\Column(type="text")
@@ -42,7 +42,7 @@ class Comment
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $update_date;
+    private $updateDate;
 
     /**
      * @ORM\OneToMany(targetEntity=CommentRate::class, mappedBy="comment", orphanRemoval=true)
@@ -97,12 +97,12 @@ class Comment
 
     public function getCreationDate(): ?\DateTimeInterface
     {
-        return $this->creation_date;
+        return $this->creationDate;
     }
 
-    public function setCreationDate(\DateTimeInterface $creation_date): self
+    public function setCreationDate(\DateTimeInterface $creationDate): self
     {
-        $this->creation_date = $creation_date;
+        $this->creationDate = $creationDate;
 
         return $this;
     }
@@ -121,12 +121,12 @@ class Comment
 
     public function getUpdateDate(): ?\DateTimeInterface
     {
-        return $this->update_date;
+        return $this->updateDate;
     }
 
-    public function setUpdateDate(?\DateTimeInterface $update_date): self
+    public function setUpdateDate(?\DateTimeInterface $updateDate): self
     {
-        $this->update_date = $update_date;
+        $this->updateDate = $updateDate;
 
         return $this;
     }

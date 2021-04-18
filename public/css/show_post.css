@@ -24,6 +24,30 @@ legend{
     font-size: 2rem;
 }
 
+/* sort by */
+
+.sort-select-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 1rem;
+}
+
+.sort-select {
+    background-color: #ffc107;
+    margin-left: 0.5rem;
+    padding: 0.2rem;
+    border: 0.2rem;
+    border-radius: 1rem;
+}
+
+.out-of-results{
+    border: 0.2rem solid #8e24aa;
+    border-radius: 0.2rem;
+    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+    width: max-content;
+}
+
 .comment-group{
     margin-top: 1rem;
     padding: 1rem;

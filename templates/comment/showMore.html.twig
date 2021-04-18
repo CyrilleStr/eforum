@@ -1,0 +1,55 @@
+{% for comment in comments %}
+    <div class="comment-div" id="commentDiv{{comment.id}}">
+        <div class="comment-header">
+            <p class="comment-author"> <a href="{{ path('show_user',{id:comment.author.id}) }}">{{comment.author.firstName ~ ' ' ~ comment.author.lastName}}</a></p>
+            <div class="comment-header-right">
+                <p class="comment-date">
+                {{comment.creationDate | date('d/m/Y') ~ " à " ~ comment.creationDate | date('H:i')}} 
+                {% if comment.updateDate != NULL %}
+                    {{ ' (modifié le ' ~ comment.updateDate | date('d/m/Y') ~ " à " ~ comment.updateDate | date('H:i') ~ ')'}}
+                {% endif %}
+                </p>
+                {% if comment.author == app.user %}
+                    <a class="delete-comment" id="{{comment.id}}" href="{{ path('delete_comment',{id:comment.id}) }}"><img src="{{ asset('img/garbage.png') }}" alt="garbage.png"></a>
+                {% endif %}
+            </div>
+            
+        </div>
+        <div>
+            <p class="comment-content">{{comment.content | raw}}</p>
+            {% if comment.reference %}
+                <div class="reference-div">
+                    <div class="comment-header">
+                        <p class="comment-author"> <a href="{{ path('show_user',{id:comment.reference.author.id}) }}">{{comment.reference.author.firstName ~ ' ' ~ comment.reference.author.lastName}}</a></p>
+                        <p class="comment-date">
+                        {{comment.reference.creationDate | date('d/m/Y') ~ " à " ~ comment.reference.creationDate | date('H:i')}} 
+                        {% if comment.reference.updateDate != NULL %}
+                            {{ ' (modifié le ' ~ comment.reference.updateDate | date('d/m/Y') ~ " à " ~ comment.reference.updateDate | date('H:i') ~ ')'}}
+                        {% endif %}
+                        </p>
+                    </div>
+                    <p class="comment-content">{{comment.reference.content | raw}}</p>
+                    
+                </div>
+            {% endif %}
+            <div class="comment-rate-group">
+                <a {% if app.user %} href="{{ path('comment_uprate',{'id':comment.id}) }}" {% else %}title="Connectez-vous pour réagir" href="{{ path('app_login') }}"{% endif %} class="js-uprate btn-up" id="{{comment.id}}"><img src="{{ asset("img/up.png") }}" alt="up.png"></a>
+                <span id="ratecount{{comment.id}}"> {{comment.sumCommentRates}}</span>
+                <a {% if app.user %} href="{{path('comment_downrate',{'id':comment.id})}}" {% else %}title="Connectez-vous pour réagir" href="{{ path('app_login') }}"{% endif %} class="js-downrate btn-down" id="{{comment.id}}"> <img src="{{ asset("img/down.png") }}" alt="up.png"></a>
+            </div>
+            <br>
+            {% if app.user and app.user != comment.author %}
+                <a href="{{ path('create_comment',  {'post':post.id, 'reference':comment.id} ) }}" class="btn-primary answer-to" id="{{comment.author.firstName ~ ' ' ~ comment.author.lastName }}">Répondre</a>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
+
+{% if more == true %}
+    <div class="div-show-more">
+        <a href="{{path('list_comments', {postId:post.id, startAt:startAt, orderBy:orderBy} )}}" id="show_more" class="btn-show-more">Afficher plus</a>
+    </div>
+{% endif %}
+
+
+<input id="nb_comments_added" value="{{ comments|length }}" hidden>

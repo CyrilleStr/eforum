@@ -3,23 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Post;
-use App\Entity\Category;
 use App\Entity\Comment;
-use App\Entity\CommentRate;
 use APP\Entity\Notif;
-use App\Form\CommentType;
 use App\Form\PostType;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
+use App\Controller\CommentController;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use OutOfRangeException;
-use phpDocumentor\Reflection\Types\Boolean;
-use PhpParser\Node\Stmt\Break_;
-use PhpParser\Node\Stmt\ElseIf_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PostController extends AbstractController
@@ -80,23 +74,22 @@ class PostController extends AbstractController
      * @Route("/post/show/{id}", name="show_post")
      */
 
-     public function show($id, PostRepository $postRepo,EntityManagerInterface $manager){
+     public function show($id, PostRepository $postRepo, CommentRepository $commentRepo, EntityManagerInterface $manager, CommentController $commentController){
 
         $post = $postRepo->find($id);
+
+        // Add view
         $manager->persist($post->setView($post->getView() + 1));
         $manager->flush();
 
-        // Get comments       
-        $repoComment = $this->getDoctrine()->getRepository(Comment::class);
-        $comments = $repoComment->findBy(
-            ['post' => $post],
-            ['creation_date' => 'DESC']
-        );
-
-
+        // Get comments 
+        $comments = $commentController->getComments($post, 'rateDesc', 0, $commentRepo);  
+       
         return $this->render('post/show.html.twig',[
             'post' => $post,
-            'comments' => $comments
+            'comments' => $comments['comments'],
+            'more' => $comments['more'],
+            'size' => $comments['size']
         ]);
      }
 

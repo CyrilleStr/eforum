@@ -124,7 +124,9 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: max-content;
+    width: 20rem;
+    height: 20rem;
+    overflow: auto;
 }
 
 .js-dropdown ul a{

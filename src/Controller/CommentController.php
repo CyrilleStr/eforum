@@ -8,14 +8,16 @@ use App\Entity\Post;
 use App\Entity\Notif;
 use App\Repository\CommentRateRepository;
 use App\Repository\CommentRepository;
+use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CommentController extends AbstractController
 {
+    
+
     /**
      * @Route("/comment", name="comment")
      */
@@ -25,6 +27,34 @@ class CommentController extends AbstractController
             'controller_name' => 'CommentController',
         ]);
     }
+  
+
+    /**
+     * @Route("/comment/list/{postId}/{startAt}/{orderBy}", name="list_comments",  defaults={"postId":NULL, "startAt":0, "orderBy":"rateDesc"})
+     */
+    public function list($postId, $startAt, $orderBy, PostRepository $postRepo, CommentRepository $commentRepo){
+
+        $post = null;
+    
+        if($postId != null) $post = $postRepo->find($postId);
+
+        if($post == null) return $this->json([
+                "code" => 403,
+                "message" => "post not found"
+            ],403);
+        
+        $comments = $this->getComments($post, $orderBy, $startAt,$commentRepo);
+
+        return $this->render('comment/showMore.html.twig', [
+            'comments' => $comments['comments'],
+            'post' => $post,
+            'more'=> $comments['more'],
+            'orderBy' => $orderBy,
+            'startAt' => $startAt + sizeof($comments['comments'])
+        ]);
+
+    }
+
 
     /**
      * @Route("/comment/create/{post}/{reference}", name="create_comment",  defaults={"reference": 0})
@@ -262,5 +292,58 @@ class CommentController extends AbstractController
             'message' => 'Downrate added on comment',
             'rates' => $sum
         ],200);
-     }
+    }
+
+    public function getComments($post, $orderBy, $startAt = 0,CommentRepository $commentRepo) {
+        $orderBySQL = []; 
+        $orderByUsort = null;
+        switch($orderBy) {
+            case "rateDesc";
+                $orderByUsort = "rateDesc";
+                break;
+            case "rateAsc";
+                $orderByUsort = "rateAsc";
+                break;
+            case "dateAsc":
+                $orderBySQL = ['creationDate' => "ASC"];
+                break;
+            default:
+                $orderBySQL = ['creationDate' => "DESC"];
+        }
+
+        $comments = $commentRepo->findBy(
+            ['post' => $post],
+            $orderBySQL
+        ); 
+
+        $size = sizeof($comments);
+        
+        if($orderByUsort != null) {
+            if ($orderByUsort == "rateAsc") {
+                uasort($comments,function (Comment $a, Comment $b) {
+                    return ($a->sumCommentRates() < $b->sumCommentRates()) ? -1 : 1;
+                });
+            } else {
+                uasort($comments,function (Comment $a, Comment $b) {
+                    return ($a->sumCommentRates() > $b->sumCommentRates()) ? -1 : 1;
+                });
+            }
+        }
+
+        if($startAt > 0) {
+            $comments = array_slice($comments,$startAt);
+        }
+
+        $more = false;
+        if(sizeof($comments) > 10) {
+            $comments  = array_slice($comments, 0, 10);
+            $more = true;
+        }
+
+        return [
+            'comments' => $comments,
+            'more' => $more,
+            'size' => $size
+        ];
+    }
 }
