@@ -41,6 +41,7 @@ function onSubmitOrderBySelect(event){
     if(showMore != null){
       showMore.addEventListener('click',onClickShowMoreBtn);
     }
+    printedPostsCount = (maxPrintedPostCount > 10) ? 10 : maxPrintedPostCount; 
     printedPosts.innerHTML = printedPostsCount; 
   });
 }

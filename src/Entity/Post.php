@@ -6,6 +6,8 @@ use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Integer;
+use PhpParser\Node\Expr\Cast\Int_;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -66,13 +68,14 @@ class Post
     private $comments;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\OneToMany(targetEntity=PostView::class, mappedBy="post", orphanRemoval=true)
      */
-    private $view;
+    private $postViews;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->postViews = new ArrayCollection();
     }
     
 
@@ -217,14 +220,36 @@ class Post
         return $authors;
     }
 
-    public function getView(): ?int
+    /**
+     * @return Collection|PostView[]
+     */
+    public function getPostViews(): Collection
     {
-        return $this->view;
+        return $this->postViews;
     }
 
-    public function setView(int $view): self
+    public function getSumPostViews(): int {
+        return sizeof($this->postViews);
+    }
+
+    public function addPostView(PostView $postView): self
     {
-        $this->view = $view;
+        if (!$this->postViews->contains($postView)) {
+            $this->postViews[] = $postView;
+            $postView->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostView(PostView $postView): self
+    {
+        if ($this->postViews->removeElement($postView)) {
+            // set the owning side to null (unless already changed)
+            if ($postView->getPost() === $this) {
+                $postView->setPost(null);
+            }
+        }
 
         return $this;
     }

@@ -42,6 +42,7 @@
       </div>
       <hr class="my-4">
       <a class="time-box" href="{{ path('show_user',{id:post.author.id}) }}">{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</a>
+      <p>Vue : {{ post.getSumPostViews }}</p>
       <a class="btn-read" href="{{path('show_post', {id:post.id}) }}" role="button">Lire le post</a>
     </div>
   {% endfor %}

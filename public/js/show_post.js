@@ -12,9 +12,10 @@ function onSubmitOrderBySelect(event){
     axios.get(url).then(function(response){
         commentsDiv.style.opacity = "100%";
         commentsDiv.innerHTML = response.data;
-        printedCommentsCount = 10;
+        printedCommentsCount = parseInt(document.getElementById('nb_comments_added').value);
         document.getElementById("printed_comments").innerHTML = printedCommentsCount;
         if(document.getElementById("authentified").value == "true") {
+            console.log('addAllEventListener');
             addAllEventListener();
         }
         showMore = document.getElementById("show_more");
@@ -39,7 +40,11 @@ function onClickShowMoreBtn(event){
         showMore.addEventListener('click',onClickShowMoreBtn);
       }
       printedCommentsCount += parseInt(document.getElementById('nb_comments_added').value);
-      document.getElementById("printed_comments").innerHTML = printedCommentsCount; 
+      document.getElementById("printed_comments").innerHTML = printedCommentsCount;
+      if(document.getElementById("authentified").value == "true") {
+        console.log('addAllEventListener');
+        addAllEventListener();
+      }
     });
   }
 

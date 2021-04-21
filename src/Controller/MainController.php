@@ -12,6 +12,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use App\Repository\TypeRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,9 +25,29 @@ class MainController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function index($error = null): Response
+    public function index($error = null, PostRepository $postRepo, EntityManagerInterface $manager): Response
     {
-        return $this->render('main/index.html.twig');
+        // // Posts most seen in the past week
+        // $qb = $manager->createQueryBuilder();
+        // $aWeekAgo = date('Y-m-d', strtotime('- 7 days'));
+        // $today = date('Y-m-d');
+        // $qb->select('post_id')
+        //     ->from('PostView', 'v')
+        //     ->where('v.fecha BETWEEN :aWeekAgo AND :today')
+        //     ->setParameter('aWeekAgo', $aWeekAgo)
+        //     ->setParameter('today', $today);
+
+        // $query = $qb->getQuery();
+        // $tendancePosts = $query->getArrayResult();
+
+
+        $recentPosts = $postRepo->findBy([],['creationDate' => 'DESC'], 10);
+        $topPostsWeek = $postRepo->findBy([],['creationDate' => 'ASC'], 10);
+
+        return $this->render('main/index.html.twig', [
+            'recentposts' => $recentPosts,
+            'topPostsWeek' => $topPostsWeek
+        ]);
     }
 
     /**
@@ -48,7 +69,6 @@ class MainController extends AbstractController
             'key' => $key
         ]);
     } 
-
 
     /**
      * @Route("/test", name="test")
@@ -146,7 +166,6 @@ class MainController extends AbstractController
             $post->setDescription($faker->paragraphs(3,true));
             $post->setCategory($faker->randomElement($categories));
             $post->setType($faker->randomElement($types));
-            $post->setView($faker->randomDigit());
             $manager->persist($post);
 
             for ($j=0; $j < mt_rand(0,10); $j++) { 

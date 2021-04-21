@@ -3,13 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Post;
-use App\Entity\Comment;
 use APP\Entity\Notif;
 use App\Form\PostType;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use App\Controller\CommentController;
+use App\Entity\PostView;
 use App\Repository\CommentRepository;
+use App\Repository\PostViewRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,7 +38,6 @@ class PostController extends AbstractController
             $post->setCreationDate(new \DateTime);
             $post->setStatus(0);
             $post->setAuthor($this->getUser());
-            $post->setView(0);
             $manager->persist($post);
             $manager->flush();
 
@@ -74,14 +74,36 @@ class PostController extends AbstractController
      * @Route("/post/show/{id}", name="show_post")
      */
 
-     public function show($id, PostRepository $postRepo, CommentRepository $commentRepo, EntityManagerInterface $manager, CommentController $commentController){
+     public function show($id, PostRepository $postRepo, PostViewRepository $postViewRepo,CommentRepository $commentRepo, EntityManagerInterface $manager, CommentController $commentController){
 
         $post = $postRepo->find($id);
 
         // Add view
-        $manager->persist($post->setView($post->getView() + 1));
-        $manager->flush();
 
+        $user = $this->getUser();
+        if($user) {
+            if(!$postViewRepo->findBy([
+                'user' => $user,
+                'post' => $post
+            ])) {
+                $postView = new PostView();
+                $postView->setDate(new \DateTime);
+                $postView->setUser($user);
+                $manager->persist($postView);
+                $post->addPostView($postView);
+                $manager->persist($post);
+                $manager->flush();
+            }
+        } else {
+            $postView = new PostView();
+            $postView->setDate(new \DateTime);
+            $postView->setUser(null);
+            $manager->persist($postView);
+            $post->addPostView($postView);
+            $manager->persist($post);
+            $manager->flush();
+        }
+        
         // Get comments 
         $comments = $commentController->getComments($post, 'rateDesc', 0, $commentRepo);  
        

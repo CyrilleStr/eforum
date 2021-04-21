@@ -118,6 +118,11 @@ class User implements UserInterface
      */
     private $admin;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PostView::class, mappedBy="user")
+     */
+    private $postViews;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -127,6 +132,7 @@ class User implements UserInterface
         $this->usersFollower = new ArrayCollection();
         $this->usersFollowed = new ArrayCollection();
         $this->notifs = new ArrayCollection();
+        $this->postViews = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -492,6 +498,36 @@ class User implements UserInterface
     public function setAdmin(bool $admin): self
     {
         $this->admin = $admin;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PostView[]
+     */
+    public function getPostViews(): Collection
+    {
+        return $this->postViews;
+    }
+
+    public function addPostView(PostView $postView): self
+    {
+        if (!$this->postViews->contains($postView)) {
+            $this->postViews[] = $postView;
+            $postView->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostView(PostView $postView): self
+    {
+        if ($this->postViews->removeElement($postView)) {
+            // set the owning side to null (unless already changed)
+            if ($postView->getUser() === $this) {
+                $postView->setUser(null);
+            }
+        }
 
         return $this;
     }

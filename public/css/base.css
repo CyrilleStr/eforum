@@ -13,7 +13,7 @@ header {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin: 0.5rem 0 1rem 0;
 }
 
 #left_top_header{
@@ -24,25 +24,9 @@ header {
     margin: 0.4rem;
 }
 
-#eforum{
-    display: flex;
-    align-items: center;
-    height: 100%;
-    font-size: 3em;
-    color:#8e24aa;
-}
-
-#E{
-    color: #ffc107 ;
-    background-color: #8e24aa;
-    padding: 0 3% 0 3%;
-}
-
-#lfde{
-    padding-bottom: 0.3rem;
-    padding-left: 1.5rem;
-    font-family: Comic Sans MS;
-    color: black;
+#left_top_header img{
+    height: 2rem;
+    margin-right: 0.5rem;
 }
 
 #right_top_header{
@@ -104,6 +88,16 @@ header {
     height: 100%;
 }
 
+.dropdown-account ul{
+    width: max-content;
+    height: max-content;
+}
+
+.dropdown-notif ul {
+    width: 20rem;
+    height: 20rem;
+}
+
 .js-dropdown{
     position: relative;
     overflow: hidden;
@@ -124,8 +118,6 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 20rem;
-    height: 20rem;
     overflow: auto;
 }
 

@@ -1,0 +1,56 @@
+.page-content {
+    display: flex;
+    justify-content :center;
+}
+
+.left-page-content {
+    display: block;
+    width: 50rem;
+}
+
+aside {
+    width: 20rem;
+    display: block;
+}
+
+.ads {
+    margin: 1rem;
+}
+
+.ads img {
+    width: 18rem; 
+}
+
+.presentation {
+    margin: 1rem;
+    padding: 1rem;
+    background-color: #ffc107;
+}
+
+.top-post {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* General proprety */
+
+.post-group-box {
+    background-color: #fff8e1;
+    border-radius: 1rem;
+    border: solid black;
+    margin: 1rem;
+    padding: 1rem;
+}
+
+.post-group {
+    box-sizing: border-box;
+    height: 36rem;
+    overflow: auto;
+}
+
+.post {
+    border-radius: 0.2rem;
+    border: #8e24aa solid;
+    padding: 0.5rem;
+    margin: 0.5rem;
+}
