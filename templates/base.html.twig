@@ -47,36 +47,47 @@
             <nav>
                 <a class="nav-link" href="{{ path('list_posts') }}">Les plus récents</a>
                 <div class="dropdown-div">
-                    <a class="dropdown-btn" href="{{ path('list_posts', {catName:"Investissements"})}}">Investissements</a>
+                    <a class="dropdown-btn" href="{{ path('list_posts', {catName:"Placement"})}}">Investissements</a>
                     <div class="dropdown-item">
-                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Bourse",catName:"Investissements"}) }}">Bourse</a>
-                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Crypto-monnaies",catName:"Investissements"})}}">Crypto-monnaies</a>
-                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Immobilier",catName:"Investissements"})}}">Immobilier</a>
-                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Autres",catName:"Investissements"})}}">Autres</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Bourse",catName:"Placement"}) }}">Bourse</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Crypto-monnaies",catName:"Placement"})}}">Crypto-monnaies</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Immobilier",catName:"Placement"})}}">Immobilier</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Autres",catName:"Placement"})}}">Autres</a>
                     </div>
                 </div>
                 <div class="dropdown-div">
-                    <a class="dropdown-btn" href="{{ path('list_posts', {catName:"Entreprenariat"})}}">Entreprenariat</a>
+                    <a class="dropdown-btn" href="{{ path('list_posts', {catName:"Entreprise"})}}">Entreprise</a>
                     <div class="dropdown-item">
-                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Création d'entreprise",catName:"Entreprenariat"}) }}">Bourse</a>
-                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Comptabilité",catName:"Entreprenariat"})}}">Comptabilité</a>
-                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Autres",catName:"Entreprenariat"})}}">Autres</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Création d’entreprise",catName:"Entreprise"}) }}">Création d’entreprise</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Branding",catName:"Entreprise"})}}">Branding</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Autres",catName:"Entreprise"})}}">Autres</a>
                     </div>
                 </div>
                 <div class="dropdown-div">
-                    <a class="dropdown-btn" href="{{ path('list_posts', {catName:"Communication"})}}">Communication</a>
+                    <a class="dropdown-btn" href="{{ path('list_posts', {catName:"Finance d’entreprise"})}}">Finance d’entreprise</a>
                     <div class="dropdown-item">
-                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Marketing",catName:"Communication"}) }}">Marketing</a>
-                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Feedback",catName:"Communication"})}}">Feedback</a>
-                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Autres",catName:"Communication"})}}">Autres</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Comptabilité",catName:"Finance d’entreprise"}) }}">Comptabilité</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Levée de fonds",catName:"Finance d’entreprise"})}}">Levée de fonds</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Investissement",catName:"Finance d’entreprise"})}}">Investissement</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Autres",catName:"Finance d’entreprise"})}}">Autres</a>
                     </div>
                 </div>
                 <div class="dropdown-div">
                     <a class="dropdown-btn" href="{{ path('list_posts', {catName:"Management"})}}">Management</a>
                     <div class="dropdown-item">
                         <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Gestion managériale",catName:"Management"}) }}">Gestion managériale</a>
-                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Relations humaines",catName:"Management"})}}">Relations humaines</a>
-                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Gestion du stress",catName:"Management"})}}">Gestion du stress</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Psychologie",catName:"Management"})}}">Psychologie</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Autres",catName:"Management"})}}">Autres</a>
+                    </div>
+                </div>
+                <div class="dropdown-div">
+                    <a class="dropdown-btn" href="{{ path('list_posts', {catName:"Commercialisation"})}}">Commercialisation</a>
+                    <div class="dropdown-item">
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Marketing",catName:"Commercialisation"}) }}">Marketing</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Marketing Digital",catName:"Commercialisation"})}}">Marketing Digital</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Vente",catName:"Commercialisation"})}}">Vente</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Communication",catName:"Commercialisation"})}}">Communication</a>
+                        <a class="dropdown-link" href="{{path('list_posts', {subCatName:"Autres",catName:"Commercialisation"})}}">Autres</a>
                     </div>
                 </div>
                 <a class="nav-link" id="new_post" href="{{ path('create_post') }}">Nouveau post</a>
@@ -86,9 +97,10 @@
             {% block body %}{% endblock %}
         </div>
         <footer>
-            <p class="lead">Nik la peau lisse. All right reserved</p>
+            <p class="lead">GDN Company. All right reserved</p>
             <hr class="my-4">
             <div>
+                <a href="#">A propos</a>
                 <a href="#">Contacts</a>
                 <a href="#">Données personnelles</a>
                 <a href="http://gdn.cyrillestr.com">BigMuscle</a>

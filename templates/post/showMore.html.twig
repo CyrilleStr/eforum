@@ -1,4 +1,4 @@
- {% for post in posts %}
+{% for post in posts %}
     <div class="post-box">
       <div class="top-post-box">
         <h1 class="title">Sujet : {{post.title}}</h1>
@@ -11,12 +11,13 @@
         </span>
       </div>
       <hr class="my-4">
-      <p class="time-box">{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</p>
+      <a class="time-box" href="{{ path('show_user',{id:post.author.id}) }}">{{ post.author.firstName ~ ' ' ~ post.author.lastName ~ ' (le ' ~ post.creationDate | date('d/m/Y') ~ " à " ~ post.creationDate | date('H:i') ~ ')' }}</a>
+      <p>Vue : {{ post.getSumPostViews }}</p>
       <a class="btn-read" href="{{path('show_post', {id:post.id}) }}" role="button">Lire le post</a>
     </div>
   {% endfor %}
-{% if more == true %}
-<div class="div-show-more">
-  <a href="{{path('list_posts', {startAt:printedPost,onlyPost:"true",orderBy:orderBy,catName:catName,subCatName,subCatName})}}" id="show_more" class="btn-show-more">Afficher plus</a>
-</div>
-{% endif %}
+  {% if more == true %}
+  <div class="div-show-more">
+    <a href="{{path('list_posts', {startAt:posts|length,onlyPost:"true",orderBy:orderBy,catName:catName,subCatName:subCatName})}}" id="show_more" class="btn-show-more">Afficher plus</a>
+  </div>
+  {% endif %}

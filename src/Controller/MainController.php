@@ -110,37 +110,45 @@ class MainController extends AbstractController
             $manager->persist($type);
         }
         
-        $nameSubCat1 = ["Bourse","Crypto-monnaies","Immobilier","Autres"];
-        for ($i=0; $i < 4; $i++) { 
+        $nameSubCat1 = ["Création d’entreprise","Branding","Autres"];
+        for ($i=0; $i < 3; $i++) { 
             $category = new Category();
-            $category->setCatName("Investissements");
+            $category->setCatName("Entreprise");
             $category->setSubCatName($nameSubCat1[$i]);
             $manager->persist($category);
         }
 
-        $nameSubCat2 = ["Création d'entreprise","Comptabilité","Autres"];
-        for ($i=0; $i < 3; $i++) { 
+        $nameSubCat2 = ["Comptabilité","Levée de fonds","Investissement","Autres"];
+        for ($i=0; $i < 4; $i++) { 
             $category = new Category();
-            $category->setCatName("Entreprenariat");
+            $category->setCatName("Finance d’entreprise");
             $category->setSubCatName($nameSubCat2[$i]);
             $manager->persist($category);
         }
 
-        $nameSubCat3 = ["Marketing","Marketing Digital","Autres"];
-        for ($i=0; $i < 3; $i++) { 
+        $nameSubCat3 = ["Marketing","Marketing Digital","Vente ","Communication","Autres"];
+        for ($i=0; $i < 5; $i++) { 
             $category = new Category();
-            $category->setCatName("Communication");
+            $category->setCatName("Commercialisation");
             $category->setSubCatName($nameSubCat3[$i]);
             $manager->persist($category);
         }
 
-        $nameSubCat4 = ["Gestion managériale","Relations humaines","Gestion du stress","Psychologie","Autres"];
-        for ($i=0; $i < 4; $i++) { 
+        $nameSubCat4 = ["Gestion managériale","Psychologie","Autres"];
+        for ($i=0; $i < 3; $i++) { 
             $category = new Category();
             $category->setCatName("Management");
             $category->setSubCatName($nameSubCat4[$i]);
             $manager->persist($category);
-        }   
+        }
+
+        $nameSubCat5 = ["Bourse","Crypto-monnaies","Immobilier","Autres"];
+        for ($i=0; $i < 4; $i++) { 
+            $category = new Category();
+            $category->setCatName("Placement");
+            $category->setSubCatName($nameSubCat5[$i]);
+            $manager->persist($category);
+        }
 
         $manager->flush();
         echo 'finish: now call fixtures2';
