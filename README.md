@@ -1,2 +1,4 @@
-# Eforum: investor and entrepreneurship oriented forum (not in production) 
-Build for practising symfony framework.
+# [Production website](www.cyrillestr.fr)
+# About 
+- investor and entrepreneurship oriented forum
+- Build for practising symfony framework.
